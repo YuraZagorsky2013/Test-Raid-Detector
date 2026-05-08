@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="img/20260430180728.png">
+    <title>Raid Detector</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<div class="app">
+
+    <!-- HEADER -->
+    <header class="header glass">
+
+        <div class="profile" onclick="openSettings()">
+            <div class="avatar"></div>
+
+            <div>
+                <div class="name" id="name"></div>
+                <div class="desc">Натисни щоб редагувати</div>
+            </div>
+        </div>
+
+        <button class="reset-btn" onclick="resetProfile()">
+            🗑 Скинути профіль
+        </button>
+
+    </header>
+
+    <!-- MAIN -->
+    <main>
+
+        <!-- HOME -->
+        <section class="page active" id="home">
+
+            <div class="card glow center">
+
+                <img src="img/20260430180728.png" class="logo" alt="logo">
+
+                <h2>Raid Detector</h2>
+
+                <h5>Тут ви зможете бачити новини про атаки каналів, зможете знайти конкретну подію або рейдера, дізнатись, як безпечно вести канал і радитись з нашим SafetyGuide</h5>
+
+            </div>
+
+            <div class="grid">
+
+                <a class="box bkv" href="https://invite.viber.com/?g2=AQBBDKNn7JFDQFYpaWK3VmFGOgYA2zuS0MPX1xGijrCdX3fkP5%2BdN1tPOoXUYUH%2F">
+                    <b>БКV</b>
+
+                    <p>
+                        (Безпека Каналів Viber) Інформаційний канал,
+                        який прагне перемоги над рейдерами та спамерами.
+                    </p>
+                </a>
+
+                <a class="box віпз" href="https://invite.viber.com/?g2=AQBCtnmyS5hOvFYvnD3arkHfDHaH8%2B1rDHmCVa8B02nPxzQ6uAjWkOjGxTY6iXj0">
+                    <b>ВІПЗ</b>
+                    <p>(Вся інфа про захват) Центр інформації про рейдерів і трошки про інформаційні канали</p>
+                </a>
+
+                <a class="box ітрн">
+                    <b>ІТРН</b>
+                               <p>Основний союзник ВІПЗ - виконує таку ж саму роль. </p>
+                </a>
+         
+                <a class="box пзк">
+                    <b>ПЗК</b>
+                    <p>канал розвідки. шукають рейдерів, їхні дії і максимальну інформацію про них</p>
+                </a>
+
+            </div>
+
+        </section>
+
+        <!-- NEWS -->
+        <section class="page" id="news">
+
+            <h2>Новини</h2>
+
+            <div id="newsList"></div>
+
+            <div class="card news-editor" id="newsEditor">
+
+                <input
+                    type="text"
+                    id="newsInput"
+                    placeholder="Додати новину..."
+                >
+
+                <button onclick="addNews()">➕</button>
+
+            </div>
+
+        </section>
+
+        <!-- ANALYTICS -->
+        <section class="page" id="archive">
+
+            <h2>Аналітика</h2>
+
+            <div class="card">
+                <canvas id="chart"></canvas>
+            </div>
+<div class="raider-card">
+
+    <img
+        src="https://i.pravatar.cc/100?img=12"
+        class="raider-avatar"
+        alt="avatar"
+    >
+
+    <div class="raider-info">
+
+        <div class="raider-name">
+            Aлекс
+        </div>
+
+        <div class="raider-tag">
+            @Хз кто я
+        </div>
+
+        <div class="raider-stats">
+
+            <span class="danger">
+                🔥 Рівень 1
+            </span>
+
+            <span class="raids">
+                ⚠️ (null) рейдів
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+        </section>
+
+        <!-- GUIDE -->
+        <section class="page" id="guide">
+
+            <h2>Safety Guide</h2>
+
+            <div id="chatMessages"></div>
+
+            <div class="chat">
+
+                <input
+                    type="text"
+                    id="chatInput"
+                    placeholder="Напиши..."
+                >
+
+                <button onclick="sendMessage()">➤</button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- NAV -->
+    <nav class="nav glass">
+
+        <button class="active" onclick="openPage('home', this)">
+            🏠
+        </button>
+
+        <button onclick="openPage('news', this)">
+            📰
+        </button>
+
+        <button onclick="openPage('archive', this)">
+            📊
+        </button>
+
+        <button onclick="openPage('guide', this)">
+            💬
+        </button>
+
+    </nav>
+
+</div>
+
+<!-- SETTINGS -->
+<div class="modal" id="settings">
+
+    <div class="modal-content">
+
+        <h3>Налаштування</h3>
+
+        <input
+            type="text"
+            id="newName"
+            placeholder="Нік"
+        >
+
+        <input
+            type="text"
+            id="newPhone"
+            placeholder="Телефон"
+        >
+
+        <button onclick="saveProfile()">
+            Зберегти
+        </button>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

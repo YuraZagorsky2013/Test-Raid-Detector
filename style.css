@@ -1,0 +1,360 @@
+:root{
+    --bg:#121212;
+    --card:rgba(255,255,255,0.05);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:system-ui;
+}
+
+body{
+    background:var(--bg);
+    color:white;
+}
+
+.app{
+    max-width:420px;
+    margin:auto;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+
+/* HEADER */
+
+.header{
+    padding:15px;
+}
+
+.glass{
+    backdrop-filter:blur(12px);
+    background:rgba(255,255,255,0.05);
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    cursor:pointer;
+}
+
+.avatar{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:linear-gradient(45deg,#3aa0ff,#00ffcc);
+}
+
+.name{
+    font-weight:bold;
+}
+
+.desc{
+    font-size:12px;
+    opacity:0.7;
+}
+
+.reset-btn{
+    margin-top:10px;
+    width:100%;
+}
+
+/* MAIN */
+
+main{
+    flex:1;
+    padding:15px;
+}
+
+.page{
+    display:none;
+    animation:fade .3s;
+}
+
+.page.active{
+    display:block;
+}
+
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+/* CARD */
+
+.card{
+    background:var(--card);
+    border-radius:20px;
+    padding:15px;
+    margin-bottom:15px;
+}
+
+.glow{
+    box-shadow:0 0 25px rgba(58,160,255,0.25);
+}
+
+.center{
+    text-align:center;
+}
+
+.logo{
+    width:100px;
+    margin-bottom:10px;
+}
+
+/* GRID */
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.box{
+    border-radius:15px;
+    padding:20px;
+    color: white;
+    text-decoration: none;
+    background: #5AC4F6;
+}
+
+.box p{
+    font-size:12px;
+    margin-top:8px;
+}
+
+.bkv{
+    background: ;
+}
+
+.ітрн{
+    background: ;
+}
+
+.віпз{
+    background: ;
+}
+
+.пзк{
+    background: ;
+}
+
+/* CHAT */
+
+#chatMessages{
+    height:250px;
+    overflow-y:auto;
+    margin-bottom:10px;
+}
+
+.msg{
+    padding:10px;
+    border-radius:10px;
+    margin-bottom:8px;
+}
+
+.user{
+    background:#3498db;
+    text-align:right;
+}
+
+.bot{
+    background:#333;
+}
+
+.chat{
+    display:flex;
+    gap:10px;
+}
+
+.chat input{
+    flex:1;
+}
+
+/* INPUTS */
+
+input,
+button{
+    border:none;
+    border-radius:15px;
+    padding:12px;
+}
+
+button{
+    background:#3aa0ff;
+    color:white;
+    cursor:pointer;
+}
+
+/* NAV */
+
+.nav{
+    position:fixed;
+
+    bottom:15px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:calc(100% - 30px);
+    max-width:390px;
+
+    display:flex;
+    justify-content:space-around;
+
+    padding:12px;
+
+    border-radius:25px;
+
+    backdrop-filter:blur(15px);
+
+    background:rgba(30,30,30,0.75);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    z-index:999;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.35);
+}
+
+.nav button{
+    background:none;
+    font-size:22px;
+    opacity:0.5;
+}
+
+.nav button.active{
+    opacity:1;
+    transform:scale(1.15);
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-content{
+    background:#222;
+    padding:20px;
+    border-radius:20px;
+    width:300px;
+
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+/* TOAST */
+
+#toast{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#333;
+    padding:12px 20px;
+    border-radius:20px;
+
+    opacity:0;
+    transition:.3s;
+}
+
+#toast.show{
+    opacity:1;
+}
+
+/* RAIDER CARD */
+
+.raider-card{
+
+    display:flex;
+
+    gap:15px;
+
+    align-items:center;
+
+    background:rgba(255,255,255,0.05);
+
+    padding:15px;
+
+    border-radius:20px;
+
+    margin-bottom:15px;
+
+    transition:0.2s;
+}
+
+.raider-card:hover{
+    transform:scale(1.02);
+}
+
+.raider-avatar{
+
+    width:70px;
+    height:70px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:2px solid rgba(255,255,255,0.1);
+}
+
+.raider-info{
+    flex:1;
+}
+
+.raider-name{
+
+    font-size:18px;
+    font-weight:bold;
+}
+
+.raider-tag{
+
+    opacity:0.7;
+
+    margin-top:3px;
+
+    font-size:14px;
+}
+
+.raider-stats{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:10px;
+
+    font-size:14px;
+}
+
+.danger{
+    color:#ff7675;
+}
+
+.raids{
+    color:#74b9ff;
+}
