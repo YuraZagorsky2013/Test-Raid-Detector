@@ -1,5 +1,17 @@
 console.log("JS STARTED");
 
+import { createClient }
+from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+const supabase = createClient(
+
+    "https://gudtenuriajpddjsckxi.supabase.co",
+
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1ZHRlbnVyaWFqcGRkanNja3hpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NzE4MjIsImV4cCI6MjA5NDI0NzgyMn0.wd89oJ95WgMnzI2TR1RfVR5dFcPYPCCAyQ-o7J1LbAk"
+);
+
+console.log("SUPABASE CONNECTED");
+
 /* ACCESS */
 
 const allowedPhones = [
@@ -11,6 +23,7 @@ const allowedPhones = [
 /* NAV */
 
 function openPage(id, el){
+window.openPage = openPage;
 
     document.querySelectorAll(".page").forEach(page=>{
         page.classList.remove("active");
@@ -108,24 +121,41 @@ function checkAccess(){
 
 /* NEWS */
 
-function addNews(){
+async function addNews(){
 
     const input =
         document.getElementById("newsInput");
 
-    const text = input.value.trim();
+    const text =
+        input.value.trim();
 
     if(!text) return;
 
-    let news =
-        JSON.parse(localStorage.getItem("news") || "[]");
+    const author =
+        localStorage.getItem("name")
+        || "Unknown";
 
-    news.unshift(text);
+    const {
+        error
+    } = await supabase
 
-    localStorage.setItem(
-        "news",
-        JSON.stringify(news)
-    );
+    .from("news")
+
+    .insert([
+        {
+            author:author,
+            text:text
+        }
+    ]);
+
+    if(error){
+
+        console.log(error);
+
+        showToast("Помилка");
+
+        return;
+    }
 
     input.value = "";
 
@@ -134,24 +164,42 @@ function addNews(){
     showToast("Новину додано");
 }
 
-function renderNews(){
+async function renderNews(){
 
     const list =
         document.getElementById("newsList");
 
     list.innerHTML = "";
 
-    const news =
-        JSON.parse(localStorage.getItem("news") || "[]");
+    const {
+        data,
+        error
+    } = await supabase
 
-    news.forEach(item=>{
+    .from("news")
+
+    .select("*")
+
+    .order("id",{ascending:false});
+
+    if(error){
+
+        console.log(error);
+
+        return;
+    }
+
+    data.forEach(item=>{
 
         const div =
             document.createElement("div");
 
         div.className = "card";
 
-        div.innerText = item;
+        div.innerHTML = `
+            <b>${item.author}</b>
+            <p>${item.text}</p>
+        `;
 
         list.appendChild(div);
     });
@@ -232,6 +280,8 @@ window.onload = ()=>{
 
     renderNews();
 
+    renderRaiders();
+
     const ctx =
         document.getElementById("chart");
 
@@ -262,3 +312,101 @@ window.onload = ()=>{
         }
     });
 };
+
+function renderRaiders(){
+
+    const container =
+        document.getElementById("raidersList");
+
+    container.innerHTML = "";
+
+    raiders.forEach(raider=>{
+
+        const div =
+            document.createElement("div");
+
+        div.className = "raider-card";
+
+        div.innerHTML = `
+            <img
+                src="${raider.avatar}"
+                class="raider-avatar"
+            >
+
+            <div class="raider-info">
+
+                <div class="raider-name">
+                    ${raider.name}
+                </div>
+
+                <div class="raider-tag">
+                    ${raider.tag}
+                </div>
+
+                <div class="raider-stats">
+
+                    <span class="danger">
+                        🔥 Рівень ${raider.danger}
+                    </span>
+
+                    <span class="raids">
+                        ⚠️ ${raider.raids} рейдів
+                    </span>
+
+                </div>
+
+            </div>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+const raiders = [
+    {
+        avatar:"img/alex.png",
+        name:"Алекс",
+        tag:"@Хз кто я",
+        danger:1,
+        raids:50
+    },
+
+    {
+        avatar:"img/vlasik.png",
+        name:"VLASICHOOOOK",
+        tag:"@vlasik",
+        danger:3,
+        raids:12
+    },
+
+    {
+        avatar: "img/yasa.png",
+        name: "Невідомо",
+        tag: "@★⁓((Яся))⁓★",
+        danger:4,
+        raids:0
+    },
+
+    {
+        avatar: "img/yasa.png",
+        name: "Невідомо",
+        tag: "@Unknown",
+        danger:5,
+        raids:0
+    }
+];
+
+
+window.addNews = addNews;
+
+window.openPage = openPage;
+
+window.openSettings = openSettings;
+
+window.closeSettings = closeSettings;
+
+window.saveProfile = saveProfile;
+
+window.resetProfile = resetProfile;
+
+window.sendMessage = sendMessage;

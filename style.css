@@ -1,4 +1,4 @@
-:root{
+ :root{
     --bg:#121212;
     --card:rgba(255,255,255,0.05);
 }
@@ -26,7 +26,31 @@ body{
 /* HEADER */
 
 .header{
+
+    position:fixed;
+
+    top:0;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:calc(100% - 30px);
+    max-width:390px;
+
+    z-index:1000;
+
     padding:15px;
+
+    border-radius:0 0 25px 25px;
+
+    backdrop-filter:blur(15px);
+
+    background:rgba(30,30,30,0.75);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.35);
 }
 
 .glass{
@@ -66,7 +90,7 @@ body{
 
 main{
     flex:1;
-    padding:15px;
+    padding:110px 15px 100px;
 }
 
 .page{
@@ -120,11 +144,17 @@ main{
 }
 
 .box{
+    transition:0.2s;
+    display:block;
     border-radius:15px;
     padding:20px;
     color: white;
     text-decoration: none;
-    background: #5AC4F6;
+    
+}
+
+.box:active{
+    transform:scale(0.98);
 }
 
 .box p{
@@ -132,22 +162,22 @@ main{
     margin-top:8px;
 }
 
-.bkv{
-    background: ;
+.infochanel{
+     background:#5389D6;
+     background:linear-gradient(0deg,#5389D6,#3aa0ff);
 }
 
-.ітрн{
-    background: ;
+.Ninfochanel{
+    background: #10E01C;
 }
 
-.віпз{
-    background: ;
+.raider{
+    background: darkred;
 }
 
-.пзк{
-    background: ;
+.creator{
+   background:linear-gradient(0deg,#5AC4F6,#3aa0ff);
 }
-
 /* CHAT */
 
 #chatMessages{
