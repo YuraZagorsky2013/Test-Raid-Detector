@@ -15,12 +15,19 @@ body{
     color:white;
 }
 
+h2 {
+    text-align:center;
+}
+
 .app{
+
     max-width:420px;
+
     margin:auto;
+
     min-height:100vh;
-    display:flex;
-    flex-direction:column;
+
+    position:relative;
 }
 
 /* HEADER */
@@ -30,11 +37,13 @@ body{
     position:fixed;
 
     top:0;
+
     left:50%;
 
     transform:translateX(-50%);
 
     width:calc(100% - 30px);
+
     max-width:390px;
 
     z-index:1000;
@@ -48,9 +57,6 @@ body{
     background:rgba(30,30,30,0.75);
 
     border:1px solid rgba(255,255,255,0.08);
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,0.35);
 }
 
 .glass{
@@ -86,20 +92,30 @@ body{
     width:100%;
 }
 
-/* MAIN */
-
 main{
-    flex:1;
-    padding:110px 15px 100px;
+
+    padding-top:140px;
+
+    padding-bottom:140px;
+
+    padding-left:15px;
+
+    padding-right:15px;
 }
 
 .page{
-    display:none;
+
+    display:none !important;
+
+    width:100%;
+
+    min-height:100vh;
+
     animation:fade .3s;
 }
 
 .page.active{
-    display:block;
+    display:block !important;
 }
 
 @keyframes fade{
@@ -120,6 +136,7 @@ main{
     border-radius:20px;
     padding:15px;
     margin-bottom:15px;
+
 }
 
 .glow{
@@ -168,11 +185,15 @@ main{
 }
 
 .Ninfochanel{
-    background: #10E01C;
+    background:linear-gradient(0deg,#10AC1C,#10E01C);
 }
 
 .raider{
-    background: darkred;
+  background:linear-gradient(0deg,#B00019,darkred);
+}
+
+.likvidator{
+   background:linear-gradient(0deg,#D09E30,#F6CE46);
 }
 
 .creator{
@@ -388,3 +409,37 @@ button{
 .raids{
     color:#74b9ff;
 }
+
+.search-box{
+    position:fixed;
+
+    bottom:90px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:calc(100% - 30px);
+    max-width:390px;
+
+    z-index:998;
+}
+
+.search-box input{
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:20px;
+
+    background:rgba(30,30,30,0.85);
+
+    color:white;
+
+    backdrop-filter:blur(15px);
+
+    border:1px solid rgba(255,255,255,0.08);
+}
+

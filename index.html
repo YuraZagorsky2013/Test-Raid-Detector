@@ -20,7 +20,7 @@
     <header class="header glass">
 
         <div class="profile" onclick="openSettings()">
-            <div class="avatar"></div>
+            <img src="img/20260513221929.png" class="avatar" alt="A">
 
             <div>
                 <div class="name" id="name"></div>
@@ -31,24 +31,36 @@
         <button class="reset-btn" onclick="resetProfile()">
             🗑 Скинути профіль
         </button>
-
     </header>
 
     <!-- MAIN -->
     <main>
 
+<div class="search-box">
+    <input
+        type="text"
+        placeholder="Пошук тимчасово не поацює"
+        oninput="searchContent(this.value)"
+    >
+</div>
         <!-- HOME -->
         <section class="page active" id="home">
 
-            <div class="card glow center">
+         
 
-                <img src="img/20260430180728.png" class="logo" alt="logo">
+    <div class="card glow center">
+        
+     <img src="img/20260430180728.png" class="logo" alt="logo">
 
                 <h2>Raid Detector</h2>
 
                 <h5>Тут ви зможете бачити новини про атаки каналів, зможете знайти конкретну подію або рейдера, дізнатись, як безпечно вести канал і радитись з нашим SafetyGuide</h5>
 
-            </div>
+    </div>
+                
+
+           
+<h2>Канали</h2>
 
             <div class="grid">
 
@@ -57,45 +69,81 @@
 
                     <p>
                         (Безпека Каналів Viber) Інформаційний канал,
-                        який прагне перемоги над рейдерами та спамерами.
+                        власник якого створив цей сайт
                     </p>
                 </a>
 
                 <a class="box infochanel" href="https://invite.viber.com/?g2=AQBCtnmyS5hOvFYvnD3arkHfDHaH8%2B1rDHmCVa8B02nPxzQ6uAjWkOjGxTY6iXj0">
                     <b>ВІПЗ</b>
-                    <p>(Вся інфа про захват) Центр інформації про рейдерів і трошки про інформаційні канали</p>
+                    <p>(Вся інфа про захват) Центр інформаційної розвідки</p>
                 </a>
 
                 <a class="box infochanel" href="https://invite.viber.com/?g2=AQBvDLtUVRVjelVh4RSVqkNRHhtLz7WHZR8rWv2OYY4Vz5lM4LKnjw%2B9E3Td1snP">
                     <b>ІТРН</b>
-                               <p>Основний союзник ВІПЗ - виконує таку ж саму роль. </p>
+                               <p>інформаційний канал. оголошує рейдерські тривоги</p>
                 </a>
          
                 <a class="box infochanel" href="https://invite.viber.com/?g2=AQB0GD7IPR3Hh1Zn7j2KRS7Zbds8uQ2afIQ0h2XzV59fNjqPkjdbbTT13mKiJLOX">
                     <b>ПЗК</b>
-                    <p>канал розвідки. шукають рейдерів, їхні дії і максимальну інформацію про них</p>
+                    <p>канал розвідки. шукають всю інфу про рейдерів</p>
                 </a>
+
                 <a class="box Ninfochanel" href="https://invite.viber.com/?g2=AQAwlKHFhsu0slZY%2BMbiPB41pwwRE94llxDle1XcnsF1GQxPCLgd2gLAKltYTkdY">
                     <b>ARE</b>
                     <p>нейтральний інформаційний канал</p>
                 </a>
+
                 <a class="box infochanel" href="https://invite.viber.com/?g2=AQAV3cSlplfIfVYYLarvOTkCGHxXMYUtaaZ7ZhrGRI5iFNuQKEtmuIQ%2Bzjk1EfhK">
                
                     <b>АІПЗ</b>
                     <p>інформаційний канал</p>
                 </a>
+
                 <a class="box infochanel" href="https://invite.viber.com/?g2=AQAF%2F9L665rn2FZugBy2lWzxO%2BgxsMsROQ%2F09KMsrbVQ4q018TsKRioTBs%2FIOGIb">
                     <b>КЗІП</b>
-                    <p>інформаційний канал. ворожує з ХВР*</p>
+                    <p>інформаційний канал</p>
                 </a>
+
+                <a class="box infochanel" href="https://invite.viber.com/?g2=AQBrdDrLlbm4hlZYx5HFHrLcdgiRO3JkSBGTs9wkNJkLLxlXFKPkzWW3v065jphQ">
+                <b>ХВР</b>
+                <p>інформаційний канал</p>
+                </a>
+
+                <a class="box infochanel" href="https://invite.viber.com/?g2=AQA994%2Bx0lRf1FZ%2BVsJbdvurEkXzVdaoXD3zYQzB%2F8wHorsHWYw6zQNPJ2v3ik%2FB">
+                <b>ПЗІ</b>
+                <p>(Проти-Захват Інформація) інформаційний канал</p>
+                </a>
+
+                <a class="box Ninfochanel" href="https://invite.viber.com/?g2=AQBGTAtmqA7dilZJYFxNZDwvlxztimZ%2BW%2FRVbQ6OhyYh9nZxhVST1KbiGOr9X5KI">
+                <b>Підвал Рік Пау</b>
+                <p>нейтральний інформаційний канал</p>
+                </a>
+
+                <a class="box infochanel" href="https://invite.viber.com/?g2=AQBFUSWTCzG5QlY14Y8D7w%2F3I8RdbzYvby1c2GypQ%2BHcjjdc8lmuk52z7z%2F2ZufN">
+                <b>ХПЗ</b>
+                <p>інформаційний канал</p>
+                </a>
+
                 <a class="box infochanel" href="https://invite.viber.com/?g2=AQAzdQ1%2FAn57ilZUd7KZ66fXI8IWsXoJPTKEje6lv9y6zFjeZ8MNMkLmK0%2F0MMNo">
                 <b>ВААР</b>
                 <p>союз антирейдерів, де випускаются майже всі новини</p>
                 </a>
+          
+                <a class="box likvidator" href="https://invite.viber.com/?g2=AQA2OhSNg5g3mFWibB1Pnh%2B9dDCoxrVStdDkuPZQzO02EVibQr3KH4lGfaGfGj%2BK">
+                <b>Solid owl</b>
+                <p>канал ліkвідатора Coin</p>
+                </a>
+
+                <a class="box raider">
+                <b>И.Н.И</b>
+                <p>найнебезпечніша імперія рейдерів, яку очолює всім відомий Алекс</p>
+                </a>
+
                 <a class="box raider" href="https://invite.viber.com/?g2=AQArdU6Ks8SGr1JwifTpi0vHZVnx2XPAWJjvHuIUV1Env13eOIQzwwWtEgRRmjM8">
                     <b>Голубинская Империя</b>
                     <p>імперія доволі небезпечних рейдерів. краще триматись подалі</p>
                 </a>
+
                 <a class="box raider" href="https://invite.viber.com/?g2=AQAYrRGY%2FwSWV1YjD0ce4nGNdkmapFESratZGaO25lrDmM0D73XqghFzrCLOa%2BXR">
                     <b>VLASICHOOOOK</b>
                     <p>канал доволі небезпечного рейдера з псевдонімом VLASICHOOK</p>
@@ -133,6 +181,7 @@
             <div class="card">
                 <canvas id="chart"></canvas>
             </div>
+            <h2>Архів Рейдерів</h2>
             <div id="raidersList"></div>
         </section>
 
@@ -145,11 +194,7 @@
 
             <div class="chat">
 
-                <input
-                    type="text"
-                    id="chatInput"
-                    placeholder="Напиши..."
-                >
+                
 
                 <button onclick="sendMessage()">➤</button>
 
@@ -161,7 +206,6 @@
 
     <!-- NAV -->
     <nav class="nav glass">
-
         <button class="active" onclick="openPage('home', this)">
             🏠
         </button>
@@ -188,6 +232,11 @@
     <div class="modal-content">
 
         <h3>Налаштування</h3>
+        <input
+            type="avatar"
+            id="newAvatar"
+            placeholder="Аватар тимчасово не працює"
+        >
 
         <input
             type="text"

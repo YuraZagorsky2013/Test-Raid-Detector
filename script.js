@@ -16,8 +16,16 @@ console.log("SUPABASE CONNECTED");
 
 const allowedPhones = [
     "+380638796098",
-    "+380673752482",
-    "+373079468510"
+    "+380681655538",
+    "+373079468510",
+    "+380930132553",
+    "+380 (63) 879 60 98",
+    "+380 (68) 165 55 38",
+    "+373 (79) 468510",
+    "+380 (93) 013 25 53",
+    "638796098",
+    "681655538",
+    "930132553"
 ];
 
 /* NAV */
@@ -250,12 +258,15 @@ function addMsg(text,type){
 function botReply(text){
 
     text = text.toLowerCase();
+    if(text.includes("привіт")){
+        return "привіт, чим можу допомогти?)";
+    }
 
-    if(text.includes("рейд")){
+    if(text.includes("рейдер")){
         return "Змініть пароль і приберіть підозрілих адмінів.";
     }
 
-    if(text.includes("захист")){
+    if(text.includes("рейдер на каналі")){
         return "Увімкніть 2FA і не переходьте за підозрілими лінками.";
     }
 
@@ -267,7 +278,7 @@ function botReply(text){
         return "Двухетапна перевірка (2FA)— це PIN-код для входу у Viber.";
     }
     
-    return "Вибачте, я вас не розумію. спробуйте написати за цими тегами: ”рейд”, ”захист”, ”двухетапна перевірка”";
+    return "Вибачте, я вас не розумію. спробуйте написати за цими тегами: ”привіт”, ”рейдер”, ”двухетапна перевірка”";
 }
 
 /* CHART */
@@ -312,6 +323,25 @@ window.onload = ()=>{
         }
     });
 };
+
+function searchContent(value){
+
+    value = value.toLowerCase();
+
+    document.querySelectorAll(".card, .box, .raider-card")
+    .forEach(el=>{
+
+        const text =
+            el.innerText.toLowerCase();
+
+        if(text.includes(value)){
+            el.style.display = "";
+        }
+        else{
+            el.style.display = "none";
+        }
+    });
+}
 
 function renderRaiders(){
 
