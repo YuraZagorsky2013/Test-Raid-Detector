@@ -314,7 +314,7 @@ window.onload = ()=>{
             datasets:[{
                 label:"Рівень загроз",
 
-                data:[1,2,1,3,2,4,3],
+                data:[0,0,0,1,0,0,0],
 
                 borderColor:"#3aa0ff",
 
@@ -394,34 +394,34 @@ function renderRaiders(){
 
 const raiders = [
     {
-        avatar:"img/alex.png",
+        avatar:"20260513221929.png",
         name:"Алекс",
-        tag:"@Хз кто я",
+        tag:"@Ыыы",
         danger:1,
-        raids:50
+        raids:43
     },
 
     {
-        avatar:"img/vlasik.png",
+        avatar:"20260514182103.png",
         name:"VLASICHOOOOK",
-        tag:"@vlasik",
+        tag:"@LEONCHIK",
         danger:3,
         raids:12
     },
 
     {
-        avatar: "img/yasa.png",
-        name: "Невідомо",
+        avatar: "20260513221929.png",
+        name: "Яся",
         tag: "@★⁓((Яся))⁓★",
         danger:4,
         raids:0
     },
 
     {
-        avatar: "img/yasa.png",
-        name: "Невідомо",
-        tag: "@Unknown",
-        danger:5,
+        avatar: "20260513221929.png",
+        name: "Некий",
+        tag: "@некий ",
+        danger:2,
         raids:0
     }
 ];
