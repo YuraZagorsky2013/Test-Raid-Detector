@@ -443,3 +443,21 @@ button{
     border:1px solid rgba(255,255,255,0.08);
 }
 
+
+.bot{
+    background:linear-gradient(
+        45deg,
+        #232526,
+        #414345
+    );
+
+    border-left:3px solid #3aa0ff;
+}
+
+.user{
+    background:linear-gradient(
+        45deg,
+        #3aa0ff,
+        #0077ff
+    );
+}

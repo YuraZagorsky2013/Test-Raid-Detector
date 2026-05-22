@@ -255,31 +255,131 @@ function addMsg(text,type){
     box.scrollTop = box.scrollHeight;
 }
 
+const guideAnswers = {
+
+    "рейд":
+        "🚨 Якщо почався рейд — одразу приберіть підозрілих адміністраторів.",
+
+    "захист":
+        "🛡 Увімкніть 2FA та не передавайте PIN-код.",
+
+    "2fa":
+        "🔐 2FA — це додатковий PIN-код для входу у Viber.",
+
+    "спам":
+        "📛 Увімкніть підтвердження повідомлень та обмежте лінки."
+};
+
+function quickAsk(text){
+
+    addMsg(text,"user");
+
+    setTimeout(()=>{
+
+        addMsg(
+            botReply(text),
+            "bot"
+        );
+
+    },300);
+}
+
 function botReply(text){
 
-    text = text.toLowerCase();
-    if(text.includes("привіт")){
-        return "привіт, чим можу допомогти?)";
+    text = text.toLowerCase().trim();
+
+    /* РЕЙД */
+
+    if(
+        text.includes("рейд") ||
+        text.includes("захват") ||
+        text.includes("raid")
+    ){
+        return "🚨 Якщо почався рейд — одразу приберіть підозрілих адміністраторів та увімкніть 2FA.";
     }
 
-    if(text.includes("рейдер")){
-        return "Змініть пароль і приберіть підозрілих адмінів.";
+    /* ЗАХИСТ */
+
+    if(
+        text.includes("захист") ||
+        text.includes("безпека") ||
+        text.includes("security")
+    ){
+        return "🛡 Нікому не передавайте PIN-код та не переходьте за підозрілими лінками.";
     }
 
-    if(text.includes("рейдер на каналі")){
-        return "Увімкніть 2FA і не переходьте за підозрілими лінками.";
+    /* 2FA */
+
+    if(
+        text.includes("2fa") ||
+        text.includes("двухетап") ||
+        text.includes("двухфактор")
+    ){
+        return "🔐 2FA — це додатковий PIN-код для захисту акаунта.";
     }
 
-    if(text.includes("двухетапна перевірка")){
-        return "Двухетапна перевірка — це PIN-код для входу у Viber.";
+    /* СПАМ */
+
+    if(
+        text.includes("спам") ||
+        text.includes("spam")
+    ){
+        return "📛 Якщо вас спамлять — закрийте доступ до повідомлень та поскаржтесь.";
     }
 
-   if(text.includes("що таке двухетапна перевірка")){
-        return "Двухетапна перевірка (2FA)— це PIN-код для входу у Viber.";
+    /* ХАК */
+
+    if(
+        text.includes("взлом") ||
+        text.includes("хак") ||
+        text.includes("hack")
+    ){
+        return "⚠️ Якщо акаунт зламали — терміново змініть пароль та видаліть чужі сесії.";
     }
-    
-    return "Вибачте, я вас не розумію. спробуйте написати за цими тегами: ”привіт”, ”рейдер”, ”двухетапна перевірка”";
+
+    /* ВІРУС */
+
+    if(
+        text.includes("вірус") ||
+        text.includes("virus")
+    ){
+        return "🦠 Не встановлюйте APK-файли від незнайомих людей.";
+    }
+
+    /* ПЕРЕВІРКА НІКУ */
+
+    const foundRaider = raiders.find(r =>
+
+        text.includes(r.name.toLowerCase()) ||
+        text.includes(r.tag.toLowerCase())
+    );
+
+    if(foundRaider){
+
+        return `
+⚠️ Знайдено в базі рейдерів
+
+👤 ${foundRaider.name}
+🏷 ${foundRaider.tag}
+🔥 Рівень небезпеки: ${foundRaider.danger}
+⚔️ Рейдів: ${foundRaider.raids}
+        `;
+    }
+
+    /* БЕЗПЕЧНИЙ */
+
+    if(
+        text.includes("безпечний") ||
+        text.includes("safe")
+    ){
+        return "✅ Якщо людини немає в базі рейдерів — це ще не гарантує безпеку.";
+    }
+
+    /* НЕВІДОМО */
+
+    return "🤖 Я не знайшов відповіді. Спробуйте інші ключові слова.";
 }
+
 
 /* CHART */
 
@@ -312,9 +412,9 @@ window.onload = ()=>{
             ],
 
             datasets:[{
-                label:"Рівень загроз",
+                label:"Кількість рейдів",
 
-                data:[0,0,0,1,0,0,0],
+                data:[0,0,0,4,0,0,0],
 
                 borderColor:"#3aa0ff",
 
@@ -398,7 +498,7 @@ const raiders = [
         name:"Алекс",
         tag:"@Ыыы",
         danger:1,
-        raids:43
+        raids:46
     },
 
     {
@@ -423,6 +523,28 @@ const raiders = [
         tag: "@некий ",
         danger:2,
         raids:0
+    },
+
+    {
+        avatar: "20260513221929.png",
+        name: "X-16",
+        tag: "@почему я",
+        danger:2,
+        raids:20
+    },
+    {
+        avatar: "20260522123339.png",
+        name: "X-17",
+        tag: "underfined",
+        danger:3,
+        raids:20
+    },
+    {
+        avatar: "20260522124356.png",
+        name: "BlueLock",
+        tag: "@Исаґи",
+        danger:3,
+        raids:10
     }
 ];
 
