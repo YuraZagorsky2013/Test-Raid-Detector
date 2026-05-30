@@ -289,6 +289,14 @@ async function renderForum(){
   });
 }
 
+function handleSendForum() {
+  const input = document.querySelector("#forumInput");
+
+  sendForumMessage(input.value);
+  input.value = "";
+}
+
+
 /* =========================
    MESSAGE MENU (TELEGRAM STYLE FIX)
 ========================= */
@@ -612,7 +620,13 @@ const channels = [
 
 
 
+window.handleSendForum = function () {
+  const input = document.querySelector("#forumInput");
+  if (!input) return;
 
+  sendForumMessage(input.value);
+  input.value = "";
+};
 
 
 
