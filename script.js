@@ -417,6 +417,10 @@ function renderChannels(){
 ========================= */
 
 window.onload = ()=>{
+
+document.getElementById("themeToggle")
+.addEventListener("change", toggleTheme);
+
   loadProfile();
   renderForum();
   renderNews();
