@@ -81,26 +81,69 @@ function saveProfile(){
     const phone =
         document.getElementById("newPhone").value;
 
-    localStorage.setItem("name",name);
-    localStorage.setItem("phone",phone);
+    const avatarInput =
+        document.getElementById("newAvatar");
+
+    localStorage.setItem("name", name);
+    localStorage.setItem("phone", phone);
 
     document.getElementById("name").innerText = name;
+
+    /* АВАТАР */
+
+    const file = avatarInput.files[0];
+
+    if(file){
+
+        const reader = new FileReader();
+
+        reader.onload = function(e){
+
+            const avatarData = e.target.result;
+
+            localStorage.setItem(
+                "avatar",
+                avatarData
+            );
+
+            document.getElementById("avatar").src =
+                avatarData;
+        };
+
+        reader.readAsDataURL(file);
+    }
 
     checkAccess();
 
     closeSettings();
 
-    showToast("Профіль збережено");
+    showToast("Профіль збережено")
 }
+
 
 function loadProfile(){
 
-    const name = localStorage.getItem("name");
+    const name =
+        localStorage.getItem("name");
+
+    const avatar =
+        localStorage.getItem("avatar");
 
     if(name){
-        document.getElementById("name").innerText = name;
+
+        document.getElementById("name").innerText =
+            name;
+    }
+
+    if(avatar){
+
+        document.getElementById("avatar").src =
+            avatar;
     }
 }
+
+
+
 
 function resetProfile(){
 
@@ -237,6 +280,75 @@ function sendMessage(){
 
     input.value = "";
 }
+
+function toggleTheme(){
+
+    const toggle =
+
+        document.getElementById("themeToggle");
+
+    if(toggle.checked){
+
+        document.body.classList.add("dark");
+
+        localStorage.setItem(
+
+            "theme",
+
+            "dark"
+
+        );
+
+    }
+
+    else{
+
+        document.body.classList.remove("dark");
+
+        localStorage.setItem(
+
+            "theme",
+
+            "light"
+         );
+     }
+}
+
+
+
+
+
+function loadTheme(){
+
+    const savedTheme =
+        localStorage.getItem("theme");
+
+    if(savedTheme){
+
+        if(savedTheme === "dark"){
+
+            document.body.classList.add("dark");
+
+            document.getElementById("themeToggle").checked = true;
+        }
+
+        return;
+    }
+
+    const prefersDark =
+        window.matchMedia(
+            "(prefers-color-scheme: dark)"
+        ).matches;
+
+    if(prefersDark){
+
+        document.body.classList.add("dark");
+
+        document.getElementById("themeToggle").checked = true;
+    }
+}
+
+
 
 function addMsg(text,type){
 
@@ -380,6 +492,9 @@ function botReply(text){
     return "🤖 Я не знайшов відповіді. Спробуйте інші ключові слова.";
 }
 
+document.getElementById("themeToggle")
+.addEventListener("change", toggleTheme);
+
 
 /* CHART */
 
@@ -387,11 +502,15 @@ window.onload = ()=>{
 
     loadProfile();
 
+    loadTheme();
+
     checkAccess();
 
     renderNews();
 
     renderRaiders();
+    
+    renderChannels();
 
     const ctx =
         document.getElementById("chart");
@@ -426,18 +545,41 @@ window.onload = ()=>{
 
 function searchContent(value){
 
-    value = value.toLowerCase();
+    value = value.toLowerCase().trim();
 
-    document.querySelectorAll(".card, .box, .raider-card")
-    .forEach(el=>{
+    const elements =
+        document.querySelectorAll(
+            ".box, .card, .raider-card"
+        );
+
+    if(value === ""){
+
+        elements.forEach(el=>{
+
+            el.style.display = "";
+        });
+
+        return;
+    }
+
+    elements.forEach(el=>{
 
         const text =
             el.innerText.toLowerCase();
 
-        if(text.includes(value)){
+        const extra =
+            (el.dataset.search || "")
+            .toLowerCase();
+
+        if(
+            text.includes(value) ||
+            extra.includes(value)
+        ){
+
             el.style.display = "";
         }
         else{
+
             el.style.display = "none";
         }
     });
@@ -455,7 +597,7 @@ function renderRaiders(){
         const div =
             document.createElement("div");
 
-        div.className = "raider-card";
+        div.className = "raider-card searchable";
 
         div.innerHTML = `
             <img
@@ -491,6 +633,51 @@ function renderRaiders(){
         container.appendChild(div);
     });
 }
+
+
+
+
+function renderChannels(){
+
+    const container =
+        document.getElementById("channelsList");
+
+    container.innerHTML = "";
+
+    channels.forEach(channel=>{
+
+        const a =
+            document.createElement("a");
+
+        a.className =
+            "box " + channel.type;
+
+        a.href =
+            channel.link;
+
+        a.target = "_blank";
+
+        a.dataset.search =
+            `
+            ${channel.name}
+            ${channel.desc}
+            ${channel.tags}
+            `.toLowerCase();
+
+        a.innerHTML = `
+            <b>${channel.name}</b>
+
+            <p>${channel.desc}</p>
+        `;
+
+        container.appendChild(a);
+    });
+}
+
+
+
+
+
 
 const raiders = [
     {
@@ -547,6 +734,126 @@ const raiders = [
         raids:10
     }
 ];
+
+
+
+
+
+
+
+const channels = [
+
+    {
+        name:"БКV",
+        desc:"(Безпека Каналів Viber) інформаційний канал автора цього сайту",
+        type:"box creator",
+        link:"https://invite.viber.com/?g2=AQBBDKNn7JFDQFYpaWK3VmFGOgYA2zuS0MPX1xGijrCdX3fkP5%2BdN1tPOoXUYUH%2F",
+        tags:"БКV безпека захист viber"
+    },
+
+    {
+        name:"ВІПЗ",
+        desc:"Вся інфа про захват",
+        type:"box infochanel",
+        link:"https://invite.viber.com/?g2=AQBvDLtUVRVjelVh4RSVqkNRHhtLz7WHZR8rWv2OYY4Vz5lM4LKnjw%2B9E3Td1snP",
+        tags:"ВІПЗ новини"
+    },
+
+    {
+        name:"ІТРН",
+        desc:"інформаційний канал. не нехтуйте, коли вони оголошують тривогу",
+        type:"box infochanel",
+        link:"https://invite.viber.com/?g2=AQBvDLtUVRVjelVh4RSVqkNRHhtLz7WHZR8rWv2OYY4Vz5lM4LKnjw%2B9E3Td1snP",
+        tags:"ІТРН Рома новини"
+    },
+
+    {
+        name:"АІПЗ",
+        desc:"інформаційний канал",
+        type:"infochanel",
+        link:"https://invite.viber.com/?g2=AQAV3cSlplfIfVYYLarvOTkCGHxXMYUtaaZ7ZhrGRI5iFNuQKEtmuIQ%2Bzjk1EfhK",
+        tags:"АІПЗ новини"
+    },
+
+    {
+        name:"КЗІП",
+        desc:"інформаційний канал",
+        type:"infochanel",
+        link:"https://invite.viber.com/?g2=AQAF%2F9L665rn2FZugBy2lWzxO%2BgxsMsROQ%2F09KMsrbVQ4q018TsKRioTBs%2FIOGIb",
+        tags:"КЗІП новини"
+    },
+
+    {
+        name:"ПЗК",
+        desc:"інформаційний канал",
+        type:"infochanel",
+        link:"https://invite.viber.com/?g2=AQB0GD7IPR3Hh1Zn7j2KRS7Zbds8uQ2afIQ0h2XzV59fNjqPkjdbbTT13mKiJLOX",
+        tags:"ПЗК Алiка новини"
+    },
+    
+    {
+        name:"ХВР",
+        desc:"інформаційний канал",
+        type:"infochanel",
+        link:"https://invite.viber.com/?g2=AQBrdDrLlbm4hlZYx5HFHrLcdgiRO3JkSBGTs9wkNJkLLxlXFKPkzWW3v065jphQ",
+        tags:"ХВР новини"
+    },
+ 
+    {
+        name:"ПЗІ",
+        desc:"інформаційний канал",
+        type:"infochanel",
+        link:"https://invite.viber.com/?g2=AQA994%2Bx0lRf1FZ%2BVsJbdvurEkXzVdaoXD3zYQzB%2F8wHorsHWYw6zQNPJ2v3ik%2FB",
+        tags:"ПЗІ новини"
+    },
+
+    {
+        name:"ХПЗ",
+        desc:"інформаційний канал",
+        type:"infochanel",
+        link:"https://invite.viber.com/?g2=AQBFUSWTCzG5QlY14Y8D7w%2F3I8RdbzYvby1c2GypQ%2BHcjjdc8lmuk52z7z%2F2ZufN",
+        tags:"ХПЗ новини"
+    },
+
+    {
+        name:"підвал Рік Пау",
+        desc:"нейтральний інформаційний канал",
+        type:"Ninfochanel",
+        link:"https://invite.viber.com/?g2=AQBGTAtmqA7dilZJYFxNZDwvlxztimZ%2BW%2FRVbQ6OhyYh9nZxhVST1KbiGOr9X5KI",
+        tags:"Рік пау новини нейтрал"
+    },
+  
+    {
+        name:"solid owl",
+        desc:"канал ліквідатора solid",
+        type:"likvidator",
+        link:"https://invite.viber.com/?g2=AQA2OhSNg5g3mFWibB1Pnh%2B9dDCoxrVStdDkuPZQzO02EVibQr3KH4lGfaGfGj%2BK",
+        tags:"solid ліквідатор"
+    },
+
+    {
+        name:"VLASICHOOOK",
+        desc:"канал рейдера Vlasik",
+        type:"box raider",
+        link:"https://invite.viber.com/?g2=AQAYrRGY%2FwSWV1YjD0ce4nGNdkmapFESratZGaO25lrDmM0D73XqghFzrCLOa%2BXR",
+        tags:"VLAS VLASIK VLASICHOK рейдер"
+    },
+
+    
+        
+    {
+        name:"BlueLock⛓️",
+        desc:"Імперія рейдерів",
+        type:"box raider",
+        link:"https://invite.viber.com/.....",
+        tags:"рейдери bluelock"
+    }
+
+];
+
+
+
+
 
 
 window.addNews = addNews;

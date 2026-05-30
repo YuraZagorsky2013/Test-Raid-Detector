@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="icon" type="image/png" href="20260430180728.png">
     <title>Raid Detector</title>
 
@@ -19,7 +19,12 @@
     <!-- HEADER -->
     <header class="header glass">
         <div class="profile" onclick="openSettings()">
-            <img src="20260513221929.png" class="avatar" alt="A">
+            <img
+    src="20260513221929.png"
+    class="avatar"
+    id="avatar"
+    alt="Avatar"
+>
 
             <div>
                 <div class="name" id="name"></div>
@@ -37,10 +42,10 @@
 
 <div class="search-box">
     <input
-        type="text"
-        placeholder="Пошук тимчасово не працює"
-        oninput="searchContent(this.value)"
-    >
+    type="text"
+    placeholder="Пошук..."
+    oninput="searchContent(this.value)"
+>
 </div>
         <!-- HOME -->
         <section class="page active" id="home">
@@ -60,110 +65,7 @@
 
            
 <h2>Канали</h2>
-
-            <div class="grid">
-
-                <a class="box creator" href="https://invite.viber.com/?g2=AQBBDKNn7JFDQFYpaWK3VmFGOgYA2zuS0MPX1xGijrCdX3fkP5%2BdN1tPOoXUYUH%2F">
-                    <b>БКV</b>
-
-                    <p>
-                        (Безпека Каналів Viber) Інформаційний канал,
-                        власник якого створив цей сайт
-                    </p>
-                </a>
-
-                <a class="box infochanel" href="https://invite.viber.com/?g2=AQBCtnmyS5hOvFYvnD3arkHfDHaH8%2B1rDHmCVa8B02nPxzQ6uAjWkOjGxTY6iXj0">
-                    <b>ВІПЗ</b>
-                    <p>(Вся інфа про захват) Центр інформаційної розвідки</p>
-                </a>
-
-                <a class="box infochanel" href="https://invite.viber.com/?g2=AQBvDLtUVRVjelVh4RSVqkNRHhtLz7WHZR8rWv2OYY4Vz5lM4LKnjw%2B9E3Td1snP">
-                    <b>ІТРН</b>
-                               <p>інформаційний канал. оголошує рейдерські тривоги</p>
-                </a>
-         
-                <a class="box infochanel" href="https://invite.viber.com/?g2=AQB0GD7IPR3Hh1Zn7j2KRS7Zbds8uQ2afIQ0h2XzV59fNjqPkjdbbTT13mKiJLOX">
-                    <b>ПЗК</b>
-                    <p>канал розвідки. шукають всю інфу про рейдерів</p>
-                </a>
-
-                <a class="box Ninfochanel" href="https://invite.viber.com/?g2=AQAwlKHFhsu0slZY%2BMbiPB41pwwRE94llxDle1XcnsF1GQxPCLgd2gLAKltYTkdY">
-                    <b>ARE</b>
-                    <p>нейтральний інформаційний канал</p>
-                </a>
-
-                <a class="box infochanel" href="https://invite.viber.com/?g2=AQAV3cSlplfIfVYYLarvOTkCGHxXMYUtaaZ7ZhrGRI5iFNuQKEtmuIQ%2Bzjk1EfhK">
-               
-                    <b>АІПЗ</b>
-                    <p>інформаційний канал</p>
-                </a>
-
-                <a class="box infochanel" href="https://invite.viber.com/?g2=AQAF%2F9L665rn2FZugBy2lWzxO%2BgxsMsROQ%2F09KMsrbVQ4q018TsKRioTBs%2FIOGIb">
-                    <b>КЗІП</b>
-                    <p>інформаційний канал</p>
-                </a>
-
-                <a class="box infochanel" href="https://invite.viber.com/?g2=AQBrdDrLlbm4hlZYx5HFHrLcdgiRO3JkSBGTs9wkNJkLLxlXFKPkzWW3v065jphQ">
-                <b>ХВР</b>
-                <p>інформаційний канал</p>
-                </a>
-
-                <a class="box infochanel" href="https://invite.viber.com/?g2=AQA994%2Bx0lRf1FZ%2BVsJbdvurEkXzVdaoXD3zYQzB%2F8wHorsHWYw6zQNPJ2v3ik%2FB">
-                <b>ПЗІ</b>
-                <p>(Проти-Захват Інформація) інформаційний канал</p>
-                </a>
-
-                <a class="box Ninfochanel" href="https://invite.viber.com/?g2=AQBGTAtmqA7dilZJYFxNZDwvlxztimZ%2BW%2FRVbQ6OhyYh9nZxhVST1KbiGOr9X5KI">
-                <b>Підвал Рік Пау</b>
-                <p>нейтральний інформаційний канал</p>
-                </a>
-
-                <a class="box infochanel" href="https://invite.viber.com/?g2=AQBFUSWTCzG5QlY14Y8D7w%2F3I8RdbzYvby1c2GypQ%2BHcjjdc8lmuk52z7z%2F2ZufN">
-                <b>ХПЗ</b>
-                <p>інформаційний канал</p>
-                </a>
-
-                <a class="box infochanel" href="https://invite.viber.com/?g2=AQAzdQ1%2FAn57ilZUd7KZ66fXI8IWsXoJPTKEje6lv9y6zFjeZ8MNMkLmK0%2F0MMNo">
-                <b>ВААР</b>
-                <p>союз антирейдерів, де випускаются майже всі новини</p>
-                </a>
-          
-                <a class="box likvidator" href="https://invite.viber.com/?g2=AQA2OhSNg5g3mFWibB1Pnh%2B9dDCoxrVStdDkuPZQzO02EVibQr3KH4lGfaGfGj%2BK">
-                <b>Solid owl</b>
-                <p>канал ліkвідатора Coin</p>
-                </a>
-
-                <a class="box infochanel" href="https://invite.viber.com/?g2=AQBwQGdd%2BtHCe1Zl6d3z6cRni%2BYROwhvXhfUXQ9QRTJIrIhx13ZL57TsyulpfHaH">
-                <b>КПЗТР</b>
-                <p>інформаційний канал</p>
-                </a>
-
-                <a class="box raider" href="https://invite.viber.com/?g2=AQAASzrF4DrNT1POiZs1Vw%2FJNFmQ0DcL24Y9QY3TAaf%2BendfsWA0N%2FO6pUThJjoz">
-                <b>И.Н.И</b>
-                <p>найнебезпечніша імперія рейдерів, яку очолює всім відомий Алекс</p>
-                </a>
- 
-                <a class="box raider" href="https://invite.viber.com/?g2=AQBsqPLIfZ0iZFaMJUKERpzuesTIU1oxaP4SkV4M%2FfVdApBG%2BJgAPZYJ4g1tcfQ5">
-                <b>АЗЛ</b>
-                <p>рейдерська імперія</p>
-                </a>
-                
-                <a class="box raider" href="https://invite.viber.com/?g2=AQAE371PllXwyFaH5Tns8ZvrRsWJ1z%2FcR9NmYR1B7OUwaOIAfNuRIXdqsCydepdH">
-                <b>BlueLock⛓️</b>
-                <p>імперія рейдерів. поани амбіціозні, але не слід боятись</p>
-                </a>
-
-                <a class="box raider" href="https://invite.viber.com/?g2=AQArdU6Ks8SGr1JwifTpi0vHZVnx2XPAWJjvHuIUV1Env13eOIQzwwWtEgRRmjM8">
-                    <b>Голубинская Империя</b>
-                    <p>імперія рейдерів</p>
-                </a>
-
-                <a class="box raider" href="https://invite.viber.com/?g2=AQAYrRGY%2FwSWV1YjD0ce4nGNdkmapFESratZGaO25lrDmM0D73XqghFzrCLOa%2BXR">
-                    <b>VLASICHOOOOK</b>
-                    <p>канал доволі небезпечного рейдера з псевдонімом VLASICHOOK</p>
-                
-                </a>
-            </div>
+<div class="grid" id="channelsList"></div>
 
         </section>
 
@@ -270,9 +172,9 @@
 
         <h3>Налаштування</h3>
         <input
-            type="avatar"
+            type="file"
             id="newAvatar"
-            placeholder="Аватар тимчасово не працює"
+            accept="image/*"
         >
 
         <input
@@ -286,6 +188,22 @@
             id="newPhone"
             placeholder="Телефон"
         >
+
+<div class="theme-switch">
+    <span>темна тема</span>
+
+<label class="switch">
+
+        <input
+
+            type="checkbox"
+
+            id="themeToggle"
+        >
+
+      <span class="slider"></span>
+</label>
+</div>
 
         <button onclick="saveProfile()">
             Зберегти
