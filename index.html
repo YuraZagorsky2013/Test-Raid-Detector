@@ -64,7 +64,11 @@
                 
 
            
-<h2>Канали</h2>
+<h2 data-lang="channels">
+    Канали
+</h2>
+
+
 <div class="grid" id="channelsList"></div>
 
         </section>
@@ -72,19 +76,25 @@
         <!-- NEWS -->
         <section class="page" id="news">
 
-            <h2>Новини</h2>
+            <h2 data-lang="news">
+    Новини
+</h2>
 
             <div id="newsList"></div>
 
             <div class="card news-editor" id="newsEditor">
 
-                <input
-                    type="text"
-                    id="newsInput"
-                    placeholder="Додати новину..."
-                >
+                  <div id="news-input-bar">
 
-                <button onclick="addNews()">➕</button>
+    <input id="newsInput" placeholder="Добавить новость..." />
+
+    <button onclick="handleSendNews()">➤</button>
+
+  </div>
+
+
+
+        
 
             </div>
 
@@ -93,14 +103,36 @@
         <!-- ANALYTICS -->
         <section class="page" id="archive">
 
-            <h2>Аналітика</h2>
-
-            <div class="card">
-                <canvas id="chart"></canvas>
-            </div>
+            
             <h2>Архів Рейдерів</h2>
             <div id="raidersList"></div>
         </section>
+
+
+<section class="page" id="forum">
+
+    <h2>Форум</h2>
+
+    <div id="forumList"></div>
+
+    <div class="chat">
+
+
+
+
+          <!-- фиксированная панель ввода -->
+
+  <div id="forum-input-bar">
+
+    <input id="forumInput" placeholder="Повідомлення..." />
+    <button onclick="handleSendForum()">➤</button>
+
+  </div>
+
+    </div>
+
+</section>
+
 
         <!-- GUIDE -->
         <section class="page" id="guide">
@@ -112,9 +144,9 @@
             <div class="chat">
 
                 <input
-                   type="text"
-                   id="chatInput"
-                   placeholder="Запитай в SafetyGuide"
+    id="chatInput"
+    data-placeholder="askGuide"
+    placeholder="Запитай в SafetyGuide"
 >
 
                 <button onclick="sendMessage()">➤</button>
@@ -145,7 +177,13 @@
 
     <!-- NAV -->
     <nav class="nav glass">
-        <button class="active" onclick="openPage('home', this)">
+        
+<button onclick="openPage('forum', this)">
+    💬
+</button>
+
+
+<button class="active" onclick="openPage('home', this)">
             🏠
         </button>
 
@@ -158,7 +196,7 @@
         </button>
 
         <button onclick="openPage('guide', this)">
-            💬
+            🤖
         </button>
 
     </nav>
@@ -190,7 +228,7 @@
         >
 
 <div class="theme-switch">
-    <span>темна тема</span>
+    <span>темна тема: </span>
 
 <label class="switch">
 
@@ -214,6 +252,14 @@
 </div>
 
 <script type="module" src="script.js"></script>
+
+<div id="msgMenuOverlay" onclick="closeMsgMenu()">
+  <div id="msgMenu" onclick="event.stopPropagation()">
+    <button onclick="replyMsg()">↩️ Reply</button>
+    <button onclick="editMsg()">✏️ Edit</button>
+    <button onclick="deleteMsg()">🗑 Delete</button>
+  </div>
+</div>
 
 </body>
 </html>

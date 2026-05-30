@@ -672,3 +672,259 @@ input:checked + .slider::before{
 
     transform:translateX(22px);
 }
+
+
+
+.forum-header{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-bottom:10px;
+}
+
+.forum-avatar{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+}
+
+.forum-time{
+
+    font-size:12px;
+
+    opacity:.7;
+}
+
+
+
+#forum {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message {
+  background: #1e1e1e;
+  padding: 10px;
+  border-radius: 10px;
+  color: white;
+}
+
+.msg-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+  color: white;
+  width: fit-content;
+}
+
+.time {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.msg-text {
+  margin-top: 8px;
+}
+
+
+#forum-page {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* список сообщений */
+#forum {
+  padding-bottom: 180px;
+}
+
+/* фиксированная панель */
+#forum-input-bar {
+  position: fixed; /* 👈 ВАЖНО */
+  left: 50%;
+  transform: translateX(-50%);
+
+  bottom: 90px; /* выше nav */
+  width: calc(100% - 30px);
+  max-width: 390px;
+
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+
+  background: #111;
+  border-top: 1px solid #333;
+
+  z-index: 2000;
+}
+
+
+#news-page {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#news {
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 70px;
+}
+
+#news-input-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+
+  background: #111;
+  border-top: 1px solid #333;
+}
+
+
+.nav {
+  z-index: 1000;
+}
+
+.reply {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 5px;
+  border-left: 2px solid #3aa0ff;
+  padding-left: 8px;
+}
+
+
+
+
+.msg-actions {
+  display: none;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.msg-actions button {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.message.active .msg-actions {
+  display: flex;
+}
+
+
+#msgMenuOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(6px);
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 99999;
+}
+
+#msgMenuOverlay.show {
+  display: flex;
+}
+
+#msgMenu {
+  background: #1e1e1e;
+  border-radius: 16px;
+  padding: 10px;
+  min-width: 180px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  animation: pop .15s ease-out;
+}
+
+@keyframes pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+#msgMenu button {
+  background: transparent;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: left;
+}
+
+#msgMenu button:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+
+.message{
+  background:#1f1f1f;
+  padding:10px;
+  margin:8px 0;
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.msgHeader{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.msgMeta{
+  display:flex;
+  flex-direction:column;
+  font-size:12px;
+  opacity:0.8;
+}
+
+.msgText{
+  font-size:14px;
+  word-wrap:break-word;
+}

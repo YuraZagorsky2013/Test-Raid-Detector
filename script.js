@@ -1,683 +1,434 @@
 console.log("JS STARTED");
 
-import { createClient }
-from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 const supabase = createClient(
-
-    "https://gudtenuriajpddjsckxi.supabase.co",
-
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1ZHRlbnVyaWFqcGRkanNja3hpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NzE4MjIsImV4cCI6MjA5NDI0NzgyMn0.wd89oJ95WgMnzI2TR1RfVR5dFcPYPCCAyQ-o7J1LbAk"
+  "https://gudtenuriajpddjsckxi.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1ZHRlbnVyaWFqcGRkanNja3hpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NzE4MjIsImV4cCI6MjA5NDI0NzgyMn0.wd89oJ95WgMnzI2TR1RfVR5dFcPYPCCAyQ-o7J1LbAk"
 );
 
 console.log("SUPABASE CONNECTED");
 
-/* ACCESS */
+/* =========================
+   ACCESS
+========================= */
 
 const allowedPhones = [
-    "+380638796098",
-    "+380681655538",
-    "+373079468510",
-    "+380930132553",
-    "+380 (63) 879 60 98",
-    "+380 (68) 165 55 38",
-    "+373 (79) 468510",
-    "+380 (93) 013 25 53",
-    "638796098",
-    "681655538",
-    "930132553"
+  "+380638796098",
+  "+380681655538",
+  "+373079468510",
+  "+380930132553",
+  "+380 (63) 879 60 98",
+  "+380 (68) 165 55 38",
+  "+373 (79) 468510",
+  "+380 (93) 013 25 53",
+  "638796098",
+  "68165565538",
+  "930132553"
 ];
 
-/* NAV */
+/* =========================
+   NAV
+========================= */
 
 function openPage(id, el){
-window.openPage = openPage;
+  window.openPage = openPage;
 
-    document.querySelectorAll(".page").forEach(page=>{
-        page.classList.remove("active");
-    });
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 
-    document.getElementById(id).classList.add("active");
-
-    document.querySelectorAll(".nav button").forEach(btn=>{
-        btn.classList.remove("active");
-    });
-
-    el.classList.add("active");
+  document.querySelectorAll(".nav button").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
 }
 
-/* TOAST */
+/* =========================
+   TOAST
+========================= */
+
+const roleStyles = {
+    user: "linear-gradient(90deg, #2b2b2b, #3a3a3a)",
+    moderator: "linear-gradient(90deg, #1e3c72, #2a5298)",
+    admin: "linear-gradient(90deg, #ff416c, #ff4b2b)"
+};
+
+const currentUser = {
+    username: "Yur4ik2013",
+    avatar: "https://i.pravatar.cc/100",
+    role: "user"
+};
 
 function showToast(text){
+  const toast = document.getElementById("toast");
+  if(!toast) return;
 
-    const toast = document.getElementById("toast");
+  toast.innerText = text;
+  toast.classList.add("show");
 
-    toast.innerText = text;
-
-    toast.classList.add("show");
-
-    setTimeout(()=>{
-        toast.classList.remove("show");
-    },2000);
+  setTimeout(()=> toast.classList.remove("show"), 2000);
 }
 
-/* SETTINGS */
+/* =========================
+   SETTINGS
+========================= */
 
 function openSettings(){
-    document.getElementById("settings").classList.add("show");
+  document.getElementById("settings")?.classList.add("show");
 }
 
 function closeSettings(){
-    document.getElementById("settings").classList.remove("show");
+  document.getElementById("settings")?.classList.remove("show");
 }
 
-/* PROFILE */
+/* =========================
+   PROFILE
+========================= */
 
 function saveProfile(){
+  const name = document.getElementById("newName").value;
+  const phone = document.getElementById("newPhone").value;
+  const avatarInput = document.getElementById("newAvatar");
 
-    const name =
-        document.getElementById("newName").value;
+  localStorage.setItem("name", name);
+  localStorage.setItem("phone", phone);
 
-    const phone =
-        document.getElementById("newPhone").value;
+  document.getElementById("name").innerText = name;
 
-    const avatarInput =
-        document.getElementById("newAvatar");
+  const file = avatarInput.files[0];
 
-    localStorage.setItem("name", name);
-    localStorage.setItem("phone", phone);
+  if(file){
+    const reader = new FileReader();
 
-    document.getElementById("name").innerText = name;
+    reader.onload = e => {
+      const avatar = e.target.result;
+      localStorage.setItem("avatar", avatar);
+      document.getElementById("avatar").src = avatar;
+    };
 
-    /* АВАТАР */
+    reader.readAsDataURL(file);
+  }
 
-    const file = avatarInput.files[0];
-
-    if(file){
-
-        const reader = new FileReader();
-
-        reader.onload = function(e){
-
-            const avatarData = e.target.result;
-
-            localStorage.setItem(
-                "avatar",
-                avatarData
-            );
-
-            document.getElementById("avatar").src =
-                avatarData;
-        };
-
-        reader.readAsDataURL(file);
-    }
-
-    checkAccess();
-
-    closeSettings();
-
-    showToast("Профіль збережено")
+  checkAccess();
+  closeSettings();
+  showToast("Профіль збережено");
 }
-
 
 function loadProfile(){
+  const name = localStorage.getItem("name");
+  const avatar = localStorage.getItem("avatar");
 
-    const name =
-        localStorage.getItem("name");
-
-    const avatar =
-        localStorage.getItem("avatar");
-
-    if(name){
-
-        document.getElementById("name").innerText =
-            name;
-    }
-
-    if(avatar){
-
-        document.getElementById("avatar").src =
-            avatar;
-    }
+  if(name) document.getElementById("name").innerText = name;
+  if(avatar) document.getElementById("avatar").src = avatar;
 }
-
-
-
 
 function resetProfile(){
-
-    localStorage.clear();
-
-    location.reload();
+  localStorage.clear();
+  location.reload();
 }
 
-/* ACCESS */
+/* =========================
+   ACCESS
+========================= */
 
 function checkAccess(){
+  const phone = localStorage.getItem("phone");
+  const editor = document.getElementById("newsEditor");
 
-    const phone =
-        localStorage.getItem("phone");
+  if(!editor) return;
 
-    const editor =
-        document.getElementById("newsEditor");
-
-    if(allowedPhones.includes(phone)){
-        editor.style.display = "block";
-    }
-    else{
-        editor.style.display = "none";
-    }
+  editor.style.display = allowedPhones.includes(phone)
+    ? "block"
+    : "none";
 }
 
-/* NEWS */
+/* =========================
+   NEWS
+========================= */
 
 async function addNews(){
+  const input = document.getElementById("newsInput");
+  const text = input.value.trim();
+  if(!text) return;
 
-    const input =
-        document.getElementById("newsInput");
+  const author = localStorage.getItem("name") || "Unknown";
 
-    const text =
-        input.value.trim();
-
-    if(!text) return;
-
-    const author =
-        localStorage.getItem("name")
-        || "Unknown";
-
-    const {
-        error
-    } = await supabase
-
+  const { error } = await supabase
     .from("news")
+    .insert([{ author, text }]);
 
-    .insert([
-        {
-            author:author,
-            text:text
-        }
-    ]);
+  if(error){
+    console.log(error);
+    showToast("Помилка");
+    return;
+  }
 
-    if(error){
-
-        console.log(error);
-
-        showToast("Помилка");
-
-        return;
-    }
-
-    input.value = "";
-
-    renderNews();
-
-    showToast("Новину додано");
+  input.value = "";
+  renderNews();
+  showToast("Новину додано");
 }
 
 async function renderNews(){
+  const list = document.getElementById("newsList");
+  if(!list) return;
 
-    const list =
-        document.getElementById("newsList");
-
-    list.innerHTML = "";
-
-    const {
-        data,
-        error
-    } = await supabase
-
+  const { data, error } = await supabase
     .from("news")
-
     .select("*")
+    .order("id", { ascending:false });
 
-    .order("id",{ascending:false});
+  if(error){
+    console.log(error);
+    return;
+  }
 
-    if(error){
+  list.innerHTML = "";
 
-        console.log(error);
+  data.forEach(item=>{
+    const div = document.createElement("div");
+    div.className = "card";
 
-        return;
-    }
+    div.innerHTML = `
+      <b>${item.author}</b>
+      <p>${item.text}</p>
+    `;
 
-    data.forEach(item=>{
-
-        const div =
-            document.createElement("div");
-
-        div.className = "card";
-
-        div.innerHTML = `
-            <b>${item.author}</b>
-            <p>${item.text}</p>
-        `;
-
-        list.appendChild(div);
-    });
+    list.appendChild(div);
+  });
 }
 
-/* CHAT */
+/* =========================
+   FORUM STATE
+========================= */
 
-function sendMessage(){
+let selectedMsgId = null;
+let selectedMsgText = "";
+let pressTimer = null;
 
-    const input =
-        document.getElementById("chatInput");
+/* =========================
+   FORUM SEND
+========================= */
 
-    const text = input.value.trim();
+async function sendForumMessage(text, replyTo=null){
+  const messageText = text.trim();
+  if(!messageText) return;
 
-    if(!text) return;
+  const author = localStorage.getItem("name") || "Unknown";
+  const avatar = localStorage.getItem("avatar") || "default.png";
 
-    addMsg(text,"user");
+  const { error } = await supabase
+    .from("forum_messages")
+    .insert([{
+      author,
+      avatar,
+      text: messageText,
+      reply_to: replyTo
+    }]);
 
-    setTimeout(()=>{
+  if(error){
+    console.log(error);
+    showToast("Помилка");
+    return;
+  }
 
-        addMsg(
-            botReply(text),
-            "bot"
-        );
+  renderForum();
+}
 
-    },400);
+/* =========================
+   FORUM RENDER (FIXED)
+========================= */
 
-    input.value = "";
+async function renderForum(){
+  const container = document.getElementById("forumList");
+  if(!container) return;
+
+  const { data, error } = await supabase
+    .from("forum_messages")
+    .select("*")
+    .order("id", { ascending: false }); // 🔥 новые сверху
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  container.innerHTML = "";
+
+  data.forEach(msg=>{
+    const div = document.createElement("div");
+    div.className = "message";
+
+    const time = msg.created_at
+      ? new Date(msg.created_at).toLocaleString()
+      : "now";
+
+    div.innerHTML = `
+      <div class="msgHeader">
+        <img class="avatar" src="${msg.avatar || 'default.png'}">
+        
+        <div class="msgMeta">
+          <b class="author">${msg.author}</b>
+          <span class="time">🕒 ${time}</span>
+        </div>
+      </div>
+
+      <div class="msgText">
+        ${msg.text}
+      </div>
+    `;
+
+    /* long press */
+    div.addEventListener("mousedown", ()=>{
+      pressTimer = setTimeout(()=>{
+        openMsgMenu(msg.id, msg.text);
+      }, 500);
+    });
+
+    div.addEventListener("mouseup", ()=> clearTimeout(pressTimer));
+    div.addEventListener("mouseleave", ()=> clearTimeout(pressTimer));
+
+    container.appendChild(div);
+  });
+}
+
+/* =========================
+   MESSAGE MENU (TELEGRAM STYLE FIX)
+========================= */
+
+function openMsgMenu(id, text){
+  selectedMsgId = id;
+  selectedMsgText = text;
+
+  document.getElementById("msgMenuOverlay")?.classList.add("show");
+}
+
+function closeMsgMenu(){
+  document.getElementById("msgMenuOverlay")?.classList.remove("show");
+}
+
+function editMsg(){
+  const newText = prompt("Edit message:", selectedMsgText);
+  if(!newText) return;
+
+  supabase
+    .from("forum_messages")
+    .update({ text:newText })
+    .eq("id", selectedMsgId)
+    .then(()=> renderForum());
+
+  closeMsgMenu();
+}
+
+function deleteMsg(){
+  supabase
+    .from("forum_messages")
+    .delete()
+    .eq("id", selectedMsgId)
+    .then(()=> renderForum());
+
+  closeMsgMenu();
+}
+
+function replyMsg(){
+  showToast("Reply selected");
+  closeMsgMenu();
+}
+
+/* =========================
+   LOAD THEME (FIXED)
+========================= */
+
+function loadTheme(){
+  const saved = localStorage.getItem("theme");
+
+  if(saved === "dark"){
+    document.body.classList.add("dark");
+    const t = document.getElementById("themeToggle");
+    if(t) t.checked = true;
+  }
 }
 
 function toggleTheme(){
-
-    const toggle =
-
-        document.getElementById("themeToggle");
-
-    if(toggle.checked){
-
-        document.body.classList.add("dark");
-
-        localStorage.setItem(
-
-            "theme",
-
-            "dark"
-
-        );
-
-    }
-
-    else{
-
-        document.body.classList.remove("dark");
-
-        localStorage.setItem(
-
-            "theme",
-
-            "light"
-         );
-     }
-}
-
-
-
-
-
-function loadTheme(){
-
-    const savedTheme =
-        localStorage.getItem("theme");
-
-    if(savedTheme){
-
-        if(savedTheme === "dark"){
-
-            document.body.classList.add("dark");
-
-            document.getElementById("themeToggle").checked = true;
-        }
-
-        return;
-    }
-
-    const prefersDark =
-        window.matchMedia(
-            "(prefers-color-scheme: dark)"
-        ).matches;
-
-    if(prefersDark){
-
-        document.body.classList.add("dark");
-
-        document.getElementById("themeToggle").checked = true;
-    }
-}
-
-
-
-function addMsg(text,type){
-
-    const box =
-        document.getElementById("chatMessages");
-
-    const div =
-        document.createElement("div");
-
-    div.className = "msg " + type;
-
-    div.innerText = text;
-
-    box.appendChild(div);
-
-    box.scrollTop = box.scrollHeight;
-}
-
-const guideAnswers = {
-
-    "рейд":
-        "🚨 Якщо почався рейд — одразу приберіть підозрілих адміністраторів.",
-
-    "захист":
-        "🛡 Увімкніть 2FA та не передавайте PIN-код.",
-
-    "2fa":
-        "🔐 2FA — це додатковий PIN-код для входу у Viber.",
-
-    "спам":
-        "📛 Увімкніть підтвердження повідомлень та обмежте лінки."
-};
-
-function quickAsk(text){
-
-    addMsg(text,"user");
-
-    setTimeout(()=>{
-
-        addMsg(
-            botReply(text),
-            "bot"
-        );
-
-    },300);
-}
-
-function botReply(text){
-
-    text = text.toLowerCase().trim();
-
-    /* РЕЙД */
-
-    if(
-        text.includes("рейд") ||
-        text.includes("захват") ||
-        text.includes("raid")
-    ){
-        return "🚨 Якщо почався рейд — одразу приберіть підозрілих адміністраторів та увімкніть 2FA.";
-    }
-
-    /* ЗАХИСТ */
-
-    if(
-        text.includes("захист") ||
-        text.includes("безпека") ||
-        text.includes("security")
-    ){
-        return "🛡 Нікому не передавайте PIN-код та не переходьте за підозрілими лінками.";
-    }
-
-    /* 2FA */
-
-    if(
-        text.includes("2fa") ||
-        text.includes("двухетап") ||
-        text.includes("двухфактор")
-    ){
-        return "🔐 2FA — це додатковий PIN-код для захисту акаунта.";
-    }
-
-    /* СПАМ */
-
-    if(
-        text.includes("спам") ||
-        text.includes("spam")
-    ){
-        return "📛 Якщо вас спамлять — закрийте доступ до повідомлень та поскаржтесь.";
-    }
-
-    /* ХАК */
-
-    if(
-        text.includes("взлом") ||
-        text.includes("хак") ||
-        text.includes("hack")
-    ){
-        return "⚠️ Якщо акаунт зламали — терміново змініть пароль та видаліть чужі сесії.";
-    }
-
-    /* ВІРУС */
-
-    if(
-        text.includes("вірус") ||
-        text.includes("virus")
-    ){
-        return "🦠 Не встановлюйте APK-файли від незнайомих людей.";
-    }
-
-    /* ПЕРЕВІРКА НІКУ */
-
-    const foundRaider = raiders.find(r =>
-
-        text.includes(r.name.toLowerCase()) ||
-        text.includes(r.tag.toLowerCase())
-    );
-
-    if(foundRaider){
-
-        return `
-⚠️ Знайдено в базі рейдерів
-
-👤 ${foundRaider.name}
-🏷 ${foundRaider.tag}
-🔥 Рівень небезпеки: ${foundRaider.danger}
-⚔️ Рейдів: ${foundRaider.raids}
-        `;
-    }
-
-    /* БЕЗПЕЧНИЙ */
-
-    if(
-        text.includes("безпечний") ||
-        text.includes("safe")
-    ){
-        return "✅ Якщо людини немає в базі рейдерів — це ще не гарантує безпеку.";
-    }
-
-    /* НЕВІДОМО */
-
-    return "🤖 Я не знайшов відповіді. Спробуйте інші ключові слова.";
-}
-
-document.getElementById("themeToggle")
-.addEventListener("change", toggleTheme);
-
-
-/* CHART */
-
-window.onload = ()=>{
-
-    loadProfile();
-
-    loadTheme();
-
-    checkAccess();
-
-    renderNews();
-
-    renderRaiders();
-    
-    renderChannels();
-
-    const ctx =
-        document.getElementById("chart");
-
-    new Chart(ctx,{
-
-        type:"line",
-
-        data:{
-            labels:[
-                "Пн",
-                "Вт",
-                "Ср",
-                "Чт",
-                "Пт",
-                "Сб",
-                "Нд"
-            ],
-
-            datasets:[{
-                label:"Кількість рейдів",
-
-                data:[0,0,0,4,0,0,0],
-
-                borderColor:"#3aa0ff",
-
-                tension:0.4
-            }]
-        }
-    });
-};
-
-function searchContent(value){
-
-    value = value.toLowerCase().trim();
-
-    const elements =
-        document.querySelectorAll(
-            ".box, .card, .raider-card"
-        );
-
-    if(value === ""){
-
-        elements.forEach(el=>{
-
-            el.style.display = "";
-        });
-
-        return;
-    }
-
-    elements.forEach(el=>{
-
-        const text =
-            el.innerText.toLowerCase();
-
-        const extra =
-            (el.dataset.search || "")
-            .toLowerCase();
-
-        if(
-            text.includes(value) ||
-            extra.includes(value)
-        ){
-
-            el.style.display = "";
-        }
-        else{
-
-            el.style.display = "none";
-        }
-    });
+  const t = document.getElementById("themeToggle");
+
+  if(t.checked){
+    document.body.classList.add("dark");
+    localStorage.setItem("theme","dark");
+  } else {
+    document.body.classList.remove("dark");
+    localStorage.setItem("theme","light");
+  }
 }
 
 function renderRaiders(){
 
-    const container =
-        document.getElementById("raidersList");
+  const container = document.getElementById("raidersList");
+  if(!container) return;
 
-    container.innerHTML = "";
+  container.innerHTML = "";
 
-    raiders.forEach(raider=>{
+  raiders.forEach(r=>{
+    const div = document.createElement("div");
+    div.className = "raider-card";
 
-        const div =
-            document.createElement("div");
+    div.innerHTML = `
+      <img src="${r.avatar}" class="raider-avatar">
 
-        div.className = "raider-card searchable";
+      <div class="raider-info">
+        <b>${r.name}</b>
+        <div>${r.tag}</div>
 
-        div.innerHTML = `
-            <img
-                src="${raider.avatar}"
-                class="raider-avatar"
-            >
+        <div class="stats">
+          🔥 ${r.danger} | ⚠️ ${r.raids}
+        </div>
+      </div>
+    `;
 
-            <div class="raider-info">
-
-                <div class="raider-name">
-                    ${raider.name}
-                </div>
-
-                <div class="raider-tag">
-                    ${raider.tag}
-                </div>
-
-                <div class="raider-stats">
-
-                    <span class="danger">
-                        🔥 Рівень ${raider.danger}
-                    </span>
-
-                    <span class="raids">
-                        ⚠️ ${raider.raids} рейдів
-                    </span>
-
-                </div>
-
-            </div>
-        `;
-
-        container.appendChild(div);
-    });
+    container.appendChild(div);
+  });
 }
-
-
 
 
 function renderChannels(){
 
-    const container =
-        document.getElementById("channelsList");
+  const container = document.getElementById("channelsList");
+  if(!container) return;
 
-    container.innerHTML = "";
+  container.innerHTML = "";
 
-    channels.forEach(channel=>{
+  channels.forEach(c=>{
+    const a = document.createElement("a");
 
-        const a =
-            document.createElement("a");
+    a.className = "box " + (c.type || "");
+    a.href = c.link;
+    a.target = "_blank";
 
-        a.className =
-            "box " + channel.type;
+    a.dataset.search = `${c.name} ${c.desc} ${c.tags}`.toLowerCase();
 
-        a.href =
-            channel.link;
+    a.innerHTML = `
+      <b>${c.name}</b>
+      <p>${c.desc}</p>
+    `;
 
-        a.target = "_blank";
-
-        a.dataset.search =
-            `
-            ${channel.name}
-            ${channel.desc}
-            ${channel.tags}
-            `.toLowerCase();
-
-        a.innerHTML = `
-            <b>${channel.name}</b>
-
-            <p>${channel.desc}</p>
-        `;
-
-        container.appendChild(a);
-    });
+    container.appendChild(a);
+  });
 }
 
+/* =========================
+   INIT
+========================= */
 
+window.onload = ()=>{
+  loadProfile();
+  renderForum();
+  renderNews();
+  renderRaiders();     // 🔥 ВОТ ОНИ
+  renderChannels();    // 🔥 ВОТ ОНИ
+  loadTheme();
+  checkAccess();
+};
 
-
-
+/* =========================
+   EXPORTS
+========================= */
 
 const raiders = [
     {
@@ -719,6 +470,7 @@ const raiders = [
         danger:2,
         raids:20
     },
+
     {
         avatar: "20260522123339.png",
         name: "X-17",
@@ -726,6 +478,7 @@ const raiders = [
         danger:3,
         raids:20
     },
+
     {
         avatar: "20260522124356.png",
         name: "BlueLock",
@@ -741,8 +494,10 @@ const raiders = [
 
 
 
-const channels = [
 
+
+
+const channels = [
     {
         name:"БКV",
         desc:"(Безпека Каналів Viber) інформаційний канал автора цього сайту",
@@ -790,7 +545,7 @@ const channels = [
         link:"https://invite.viber.com/?g2=AQB0GD7IPR3Hh1Zn7j2KRS7Zbds8uQ2afIQ0h2XzV59fNjqPkjdbbTT13mKiJLOX",
         tags:"ПЗК Алiка новини"
     },
-    
+
     {
         name:"ХВР",
         desc:"інформаційний канал",
@@ -798,7 +553,7 @@ const channels = [
         link:"https://invite.viber.com/?g2=AQBrdDrLlbm4hlZYx5HFHrLcdgiRO3JkSBGTs9wkNJkLLxlXFKPkzWW3v065jphQ",
         tags:"ХВР новини"
     },
- 
+
     {
         name:"ПЗІ",
         desc:"інформаційний канал",
@@ -822,7 +577,7 @@ const channels = [
         link:"https://invite.viber.com/?g2=AQBGTAtmqA7dilZJYFxNZDwvlxztimZ%2BW%2FRVbQ6OhyYh9nZxhVST1KbiGOr9X5KI",
         tags:"Рік пау новини нейтрал"
     },
-  
+
     {
         name:"solid owl",
         desc:"канал ліквідатора solid",
@@ -839,8 +594,6 @@ const channels = [
         tags:"VLAS VLASIK VLASICHOK рейдер"
     },
 
-    
-        
     {
         name:"BlueLock⛓️",
         desc:"Імперія рейдерів",
@@ -848,7 +601,6 @@ const channels = [
         link:"https://invite.viber.com/.....",
         tags:"рейдери bluelock"
     }
-
 ];
 
 
@@ -856,16 +608,25 @@ const channels = [
 
 
 
-window.addNews = addNews;
+
+
+
+
+
+
 
 window.openPage = openPage;
-
-window.openSettings = openSettings;
-
-window.closeSettings = closeSettings;
-
 window.saveProfile = saveProfile;
-
 window.resetProfile = resetProfile;
-
-window.sendMessage = sendMessage;
+window.sendForumMessage = sendForumMessage;
+window.renderForum = renderForum;
+window.addNews = addNews;
+window.renderNews = renderNews;
+window.openMsgMenu = openMsgMenu;
+window.closeMsgMenu = closeMsgMenu;
+window.editMsg = editMsg;
+window.deleteMsg = deleteMsg;
+window.replyMsg = replyMsg;
+window.toggleTheme = toggleTheme;
+window.openSettings = openSettings;
+window.closeSettings = closeSettings;
