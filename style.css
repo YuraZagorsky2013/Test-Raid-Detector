@@ -943,3 +943,36 @@ body.dark .message {
   flex-direction: column;
   gap: 10px;
 }
+
+
+.updates-panel {
+  width: 360px;              /* или 100% если нужно */
+  background: #1e1e1e;
+  color: white;
+  border-radius: 12px;
+  padding: 12px;
+  font-family: sans-serif;
+}
+
+.updates-list {
+  max-height: 200px;         /* 👈 ограничение высоты */
+  overflow-y: auto;          /* 👈 включаем вертикальный скролл */
+  padding-right: 6px;
+}
+
+/* красивый скролл (не обязательно) */
+.updates-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.updates-list::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 10px;
+}
+
+.update {
+  padding: 8px;
+  margin-bottom: 6px;
+  background: #2a2a2a;
+  border-radius: 8px;
+}

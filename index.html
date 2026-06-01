@@ -61,9 +61,25 @@
                 <h5>Тут ви зможете бачити новини про атаки каналів, зможете знайти конкретну подію або рейдера, дізнатись, як безпечно вести канал і радитись з нашим SafetyGuide</h5>
 
     </div>
-                
 
+
+                
+<div class="updates-panel">
+  <h3>Перелік оновлень </h3>
+
+  <div class="updates-list">
+    
+    <div class="update">Додано перелік оновлень <b>(1.06.2026)</b></div>
+    <div class="update">Додано можливіть спілкуватись у форумі realtime, не перезавантажуючи сторінку <b>(1.06.2026)</b> </div>
+    <div class="update">Додано форум <b>(31.05.2026)</b> </div>
+    <div class="update">Повний реліз сайту<b>(30.05.2026)</b> </div>
+  </div>
+</div>
            
+
+
+
+
 <h2 data-lang="channels">
     Канали
 </h2>
@@ -82,15 +98,19 @@
 
             <div id="newsList"></div>
 
-            <div class="card news-editor" id="newsEditor">
+            <div class="chat news-editor">
 
-                  <div id="news-input-bar">
+    <input
+        type="text"
+        id="newsInput"
+        placeholder="Додати новину..."
+    >
 
-    <input id="newsInput" placeholder="Добавить новость..." />
+    <button onclick="addNews()">
+        ➤
+    </button>
 
-    <button onclick="handleSendNews()">➤</button>
-
-  </div>
+</div>
 
 
 

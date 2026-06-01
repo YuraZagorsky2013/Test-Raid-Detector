@@ -631,6 +631,55 @@ window.handleSendForum = function () {
 
 
 
+supabase
+
+.channel("forum-realtime")
+
+.on(
+    "postgres_changes",
+    {
+        event: "*",
+        schema: "public",
+        table: "forum_messages"
+    },
+    () => {
+
+        console.log(
+            "Forum updated"
+        );
+
+        renderForum();
+
+    }
+)
+
+.subscribe();
+
+
+supabase
+
+.channel("news-realtime")
+
+.on(
+    "postgres_changes",
+    {
+        event: "*",
+        schema: "public",
+        table: "news"
+    },
+    () => {
+
+        console.log(
+            "News updated"
+        );
+
+        renderNews();
+
+    }
+)
+
+.subscribe();
+
 
 
 window.openPage = openPage;
