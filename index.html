@@ -68,7 +68,7 @@
   <h3>Перелік оновлень </h3>
 
   <div class="updates-list">
-    
+    <div class="update">Виправлення деяких багів та нові рейдери<b>(02.06.2026)</b> </div>
     <div class="update">Додано перелік оновлень <b>(1.06.2026)</b></div>
     <div class="update">Додано можливіть спілкуватись у форумі realtime, не перезавантажуючи сторінку <b>(1.06.2026)</b> </div>
     <div class="update">Додано форум <b>(31.05.2026)</b> </div>
@@ -130,7 +130,6 @@
 
 
 <section class="page" id="forum">
-
     <h2>Форум</h2>
 
     <div id="forumList"></div>
@@ -200,6 +199,21 @@
         
 <button onclick="openPage('forum', this)">
     💬
+
+
+
+    <span
+
+        id="forumBadge"
+
+        class="badge"
+
+    >
+
+        0
+
+    </span>
+
 </button>
 
 
@@ -209,6 +223,20 @@
 
         <button onclick="openPage('news', this)">
             📰
+
+
+
+    <span
+
+        id="newsBadge"
+
+        class="badge"
+
+    >
+
+        !
+
+    </span>
         </button>
 
         <button onclick="openPage('archive', this)">

@@ -195,6 +195,36 @@ async function renderNews(){
   });
 }
 
+function updateNewsBadge(){
+
+    const badge =
+        document.getElementById(
+            "newsBadge"
+        );
+
+    const lastRead =
+        Number(
+            localStorage.getItem(
+                "lastNewsRead"
+            ) || 0
+        );
+
+    if(
+        currentLatestNewsId >
+        lastRead
+    ){
+
+        badge.style.display =
+            "flex";
+    }
+    else{
+
+        badge.style.display =
+            "none";
+    }
+}
+
+
 /* =========================
    FORUM STATE
 ========================= */
@@ -288,6 +318,22 @@ async function renderForum(){
     container.appendChild(div);
   });
 }
+
+
+
+function openNews(){
+
+    openPage("news");
+
+    localStorage.setItem(
+        "lastNewsRead",
+        currentLatestNewsId
+    );
+
+    updateNewsBadge();
+}
+
+
 
 function handleSendForum() {
   const input = document.querySelector("#forumInput");
@@ -480,13 +526,13 @@ const raiders = [
         name: "X-16",
         tag: "@почему я",
         danger:2,
-        raids:20
+        raids:30
     },
 
     {
         avatar: "20260522123339.png",
         name: "X-17",
-        tag: "underfined",
+        tag: "null",
         danger:3,
         raids:20
     },
@@ -497,6 +543,30 @@ const raiders = [
         tag: "@Исаґи",
         danger:3,
         raids:10
+    },
+ 
+    {
+        avatar: "20260513221929.png",
+        name: "it s Nekore",
+        tag: "@Tanya-🌙-lunar'n",
+        danger:2,
+        raids:40
+    },
+   
+    {
+        avatar: "20260602084641.png",
+        name: "Глафіра",
+        tag: "🖤Glafira🖤(Ді)",
+        danger:2,
+        raids:30
+    },
+   
+    {
+        avatar: "20260602085801.png",
+        name: "Rora",
+        tag: "null",
+        danger:3,
+        raids:40
     }
 ];
 
@@ -610,7 +680,7 @@ const channels = [
         name:"BlueLock⛓️",
         desc:"Імперія рейдерів",
         type:"box raider",
-        link:"https://invite.viber.com/.....",
+        link:"https://invite.viber.com/?g2=AQAE371PllXwyFaH5Tns8ZvrRsWJ1z%2FcR9NmYR1B7OUwaOIAfNuRIXdqsCydepdH",
         tags:"рейдери bluelock"
     }
 ];

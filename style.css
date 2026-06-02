@@ -976,3 +976,33 @@ body.dark .message {
   background: #2a2a2a;
   border-radius: 8px;
 }
+
+
+.nav button{
+
+    position:relative;
+}
+
+.badge{
+
+    position:absolute;
+
+    top:4px;
+    right:4px;
+
+    width:18px;
+    height:18px;
+
+    border-radius:50%;
+
+    background:red;
+
+    color:white;
+
+    font-size:12px;
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+}
