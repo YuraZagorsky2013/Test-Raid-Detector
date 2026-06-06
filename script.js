@@ -18,6 +18,7 @@ const allowedPhones = [
   "+380681655538",
   "+373079468510",
   "+380930132553",
+  "+380983756610",
   "+380 (63) 879 60 98",
   "+380 (68) 165 55 38",
   "+373 (79) 468510",
@@ -27,12 +28,90 @@ const allowedPhones = [
   "930132553"
 ];
 
+const phone =
+    localStorage.getItem("phone")
+    || "";
+
+
+
+async function isAdmin(){
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if(!user) return false;
+
+  const { data } =
+    await supabase
+
+      .from("admins")
+
+      .select("*")
+
+      .eq(
+        "email",
+        user.email
+      )
+      .single();
+
+  return !!data;
+}
+
+
+function openUserInfo(
+    avatar,
+    name,
+    phone
+){
+
+    if(
+        localStorage.getItem("phone")
+        !== "+380638796098"
+    ){
+        return;
+    }
+
+    document.getElementById(
+        "userInfoAvatar"
+    ).src = avatar;
+
+    document.getElementById(
+        "userInfoName"
+    ).innerText = name;
+
+    document.getElementById(
+        "userInfoPhone"
+    ).innerText = phone;
+
+    document.getElementById(
+        "userInfoModal"
+    ).classList.add(
+        "show"
+    );
+}
+
+
+
+
+function closeUserInfo(){
+
+    document.getElementById(
+        "userInfoModal"
+    ).classList.remove(
+        "show"
+    );
+}
+
+
+
+
+
 /* =========================
    NAV
 ========================= */
 
 function openPage(id, el){
-  window.openPage = openPage;
 
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
@@ -241,6 +320,11 @@ async function sendForumMessage(text, replyTo=null){
   const messageText = text.trim();
   if(!messageText) return;
 
+  const phone =
+    localStorage.getItem(
+        "phone"
+    );
+
   const author = localStorage.getItem("name") || "Unknown";
   const avatar = localStorage.getItem("avatar") || "default.png";
 
@@ -249,12 +333,14 @@ async function sendForumMessage(text, replyTo=null){
     .insert([{
       author,
       avatar,
+      phone,
       text: messageText,
       reply_to: replyTo
     }]);
 
   if(error){
-    console.log(error);
+    console.error(error);
+    
     showToast("Помилка");
     return;
   }
@@ -267,56 +353,97 @@ async function sendForumMessage(text, replyTo=null){
 ========================= */
 
 async function renderForum(){
-  const container = document.getElementById("forumList");
-  if(!container) return;
 
-  const { data, error } = await supabase
-    .from("forum_messages")
-    .select("*")
-    .order("id", { ascending: false }); // 🔥 новые сверху
+    const container =
+        document.getElementById("forumList");
 
-  if(error){
-    console.log(error);
-    return;
-  }
+    if(!container) return;
 
-  container.innerHTML = "";
+    const { data, error } =
+        await supabase
 
-  data.forEach(msg=>{
-    const div = document.createElement("div");
-    div.className = "message";
+        .from("forum_messages")
 
-    const time = msg.created_at
-      ? new Date(msg.created_at).toLocaleString()
-      : "now";
+        .select("*")
 
-    div.innerHTML = `
-      <div class="msgHeader">
-        <img class="avatar" src="${msg.avatar || 'default.png'}">
-        
-        <div class="msgMeta">
-          <b class="author">${msg.author}</b>
-          <span class="time">🕒 ${time}</span>
-        </div>
-      </div>
+        .order("id", {
+            ascending:false
+        });
 
-      <div class="msgText">
-        ${msg.text}
-      </div>
-    `;
+    if(error){
 
-    /* long press */
-    div.addEventListener("mousedown", ()=>{
-      pressTimer = setTimeout(()=>{
-        openMsgMenu(msg.id, msg.text);
-      }, 500);
+        console.log(error);
+
+        return;
+    }
+
+    container.innerHTML = "";
+
+    data.forEach(msg=>{
+
+        const div =
+            document.createElement("div");
+
+        div.className = "message";
+
+        const time =
+            msg.created_at
+            ? new Date(
+                msg.created_at
+              ).toLocaleString()
+            : "Зараз";
+
+        div.innerHTML = `
+
+            <div class="forum-header">
+
+                <img
+                    src="${msg.avatar || '20260513221929.png'}"
+                    class="forum-avatar"
+                >
+
+                <div>
+
+                    <div class="forum-name">
+                        ${msg.author || "Unknown"}
+                    </div>
+
+                    <div class="forum-time">
+                        🕒 ${time}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="forum-text">
+                ${msg.text}
+            </div>
+
+        `;
+
+        const avatar =
+            div.querySelector(
+                ".forum-avatar"
+            );
+
+        avatar.addEventListener(
+            "click",
+            ()=>{
+
+                openUserInfo(
+                    msg.avatar,
+                    msg.author,
+                    msg.phone
+                );
+
+            }
+        );
+
+        container.appendChild(div);
+
     });
 
-    div.addEventListener("mouseup", ()=> clearTimeout(pressTimer));
-    div.addEventListener("mouseleave", ()=> clearTimeout(pressTimer));
-
-    container.appendChild(div);
-  });
 }
 
 
@@ -767,3 +894,5 @@ window.replyMsg = replyMsg;
 window.toggleTheme = toggleTheme;
 window.openSettings = openSettings;
 window.closeSettings = closeSettings;
+window.openUserInfo = openUserInfo;
+window.closeUserInfo = closeUserInfo;
