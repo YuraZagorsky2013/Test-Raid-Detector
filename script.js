@@ -105,6 +105,85 @@ function closeUserInfo(){
 
 
 
+const ADMIN_PHONE = "+380638796098";
+const PASSWORD = "Sc203#";
+
+const MAX_ATTEMPTS = 5;
+const BLOCK_TIME = 60 * 60 * 1000; // 1 час
+
+
+
+function getAuthData() {
+  return JSON.parse(localStorage.getItem("authData")) || {
+    attempts: 0,
+    blockedUntil: 0
+  };
+}
+
+function setAuthData(data) {
+  localStorage.setItem("authData", JSON.stringify(data));
+}
+
+
+function isBlocked() {
+  const data = getAuthData();
+  return Date.now() < data.blockedUntil;
+}
+
+
+function checkPhoneAccess(phoneInput, passwordInput) {
+  const phone = phoneInput.trim();
+  const pass = passwordInput.trim();
+
+  const data = getAuthData();
+
+  // если заблокирован
+  if (isBlocked()) {
+    showToast("Ліміт вичерпано. спробуйте через 1 годину");
+    return false;
+  }
+
+  // если это НЕ твой номер → просто пропускаем (или можешь ограничить)
+  if (phone !== ADMIN_PHONE) {
+    return true;
+  }
+
+  // проверка пароля
+  if (pass === PASSWORD) {
+    setAuthData({ attempts: 0, blockedUntil: 0 });
+    return true;
+  }
+
+  // ошибка пароля
+  data.attempts += 1;
+
+  if (data.attempts >= MAX_ATTEMPTS) {
+    data.blockedUntil = Date.now() + BLOCK_TIME;
+    data.attempts = 0;
+    showToast("Вичерпано ліміт. Блок на 1 годину");
+  } else {
+    showToast(`Неправильний пароль (${data.attempts}/${MAX_ATTEMPTS})`);
+  }
+
+  setAuthData(data);
+  return false;
+}
+
+
+
+function login() {
+  const phone = document.getElementById("newPhone").value;
+  const password = prompt("Введіть пароль:");
+
+  if (checkPhoneAccess(phone, password)) {
+    localStorage.setItem("phone", phone);
+    showToast("Доступ дозволено");
+    checkAccess();
+  }
+}
+
+
+
 
 
 /* =========================
@@ -214,10 +293,60 @@ function checkAccess(){
 
   if(!editor) return;
 
-  editor.style.display = allowedPhones.includes(phone)
-    ? "block"
-    : "none";
+  // если номер НЕ в списке → сразу скрыть
+  if(!allowedPhones.includes(phone)){
+    editor.style.display = "none";
+    return;
+  }
+
+  // если в списке → НО требует пароль
+  const ok = sessionStorage.getItem("auth_ok");
+
+  if(ok === "true"){
+    editor.style.display = "block";
+  } else {
+    editor.style.display = "none";
+    askPassword(); // 👈 вот тут магия
+  }
 }
+
+
+
+
+
+
+
+let attempts = 0;
+let blockedUntil = 0;
+
+function askPassword(){
+  if(Date.now() < blockedUntil){
+    showToast("Почекайте 1 годину");
+    return;
+  }
+
+  const pass = prompt("Введiть пароль:");
+
+  if(pass === "Sc203#"){
+    sessionStorage.setItem("auth_ok", "true");
+    attempts = 0;
+    checkAccess();
+    return;
+  }
+
+  attempts++;
+
+  if(attempts >= 5){
+    blockedUntil = Date.now() + 3600000;
+    attempts = 0;
+    showToast("Забагато спроб. Заблоковано на 1 годину");
+  } else {
+    showToast(`Неправильно (${attempts}/5)`);
+  }
+}
+
+
+
 
 /* =========================
    NEWS
@@ -756,11 +885,19 @@ const channels = [
     },
 
     {
-        name:"ХВР",
+        name:"КПЗТР",
         desc:"інформаційний канал",
         type:"infochanel",
-        link:"https://invite.viber.com/?g2=AQBrdDrLlbm4hlZYx5HFHrLcdgiRO3JkSBGTs9wkNJkLLxlXFKPkzWW3v065jphQ",
-        tags:"ХВР новини"
+        link:"https://invite.viber.com/?g2=AQBwQGdd%2BtHCe1Zl6d3z6cRni%2BYROwhvXhfUXQ9QRTJIrIhx13ZL57TsyulpfHaH",
+        tags:"КПЗТР ветліс новини"
+    },
+
+    {
+        name:"ІПЗ",
+        desc:"інформаційний канал",
+        type:"infochanel",
+        link:"https://invite.viber.com/?g2=AQBwQGdd%2BtHCe1Zl6d3z6cRni%2BYROwhvXhfUXQ9QRTJIrIhx13ZL57TsyulpfHaH",
+        tags:"ІПЗ новини"
     },
 
     {
@@ -780,11 +917,11 @@ const channels = [
     },
 
     {
-        name:"підвал Рік Пау",
-        desc:"нейтральний інформаційний канал",
-        type:"Ninfochanel",
-        link:"https://invite.viber.com/?g2=AQBGTAtmqA7dilZJYFxNZDwvlxztimZ%2BW%2FRVbQ6OhyYh9nZxhVST1KbiGOr9X5KI",
-        tags:"Рік пау новини нейтрал"
+        name:"БМПЗ",
+        desc:"потужний інформаційний канал",
+        type:"infochanel",
+        link:"https://invite.viber.com/?g2=AQB32pvqWnc0PVaz9tf8DsWdRy7%2B7%2Fej7HbXOAnJNkyOokK8xHZOTUJvGstXgDYe",
+        tags:"Рік пау новини"
     },
 
     {
@@ -796,11 +933,19 @@ const channels = [
     },
 
     {
-        name:"VLASICHOOOK",
-        desc:"канал рейдера Vlasik",
+        name:"Імперія КРТ",
+        desc:"імперія рейдерів",
         type:"box raider",
-        link:"https://invite.viber.com/?g2=AQAYrRGY%2FwSWV1YjD0ce4nGNdkmapFESratZGaO25lrDmM0D73XqghFzrCLOa%2BXR",
-        tags:"VLAS VLASIK VLASICHOK рейдер"
+        link:"https://invite.viber.com/?g2=AQB0lSCwSDoowFZsEOeGWz49hSoAEuhQYnbf7GQpy8OKj6pJ4Wd7%2FzoSHY1miGHo",
+        tags:"КРТ рейдери лохи"
+    },
+
+    {
+        name:"7 1 1  Хаб",
+        desc:"імперія рейдерів",
+        type:"raider",
+        link:"https://invite.viber.com/?g2=AQBL2Amx6XsJflZ1NJ3d9H65nETiGrONDYNmw1QpvLW%2FQBsDOEn1vHGkwLzSQFsK",
+        tags:"hub"
     },
 
     {
