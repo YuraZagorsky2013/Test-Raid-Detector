@@ -9,6 +9,8 @@ const supabase = createClient(
 
 console.log("SUPABASE CONNECTED");
 
+
+
 /* =========================
    ACCESS
 ========================= */
@@ -433,6 +435,297 @@ function updateNewsBadge(){
 }
 
 
+
+
+
+
+// ===============================
+// LANGUAGE SYSTEM (PATH 2 FINAL)
+// ===============================
+
+let currentLanguage = "ru";
+let originalNodes = [];
+let isOriginalStored = false;
+
+// Фразы, которые нельзя доверять автопереводу
+const MANUAL_TRANSLATIONS = {
+  "uk": {
+    "Захист каналу": "Захист каналу",
+    "Профиль": "Профіль",
+    "Настройки": "Налаштування",
+    "Главная": "Головна",
+    "Сообщения": "Повідомлення"
+  },
+  "en": {
+    "Захист каналу": "Channel protection",
+    "Профиль": "Profile",
+    "Настройки": "Settings",
+    "Главная": "Home",
+    "Сообщения": "Messages"
+  }
+};
+
+// -------------------------------
+// 1) Собираем оригинальный русский текст
+// -------------------------------
+function storeOriginalContent() {
+  if (isOriginalStored) return;
+
+  originalNodes = [];
+
+  // Текстовые узлы
+  const walker = document.createTreeWalker(
+    document.body,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) {
+          return NodeFilter.FILTER_REJECT;
+        }
+
+        const parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+
+        // Игнорируем script/style
+        const tag = parent.tagName?.toLowerCase();
+        if (tag === "script" || tag === "style" || tag === "noscript") {
+          return NodeFilter.FILTER_REJECT;
+        }
+
+        // Игнорируем элементы с запретом перевода
+        if (parent.closest("[data-no-translate]")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    }
+  );
+
+  let node;
+  while ((node = walker.nextNode())) {
+    originalNodes.push({
+      type: "text",
+      node,
+      original: node.nodeValue
+    });
+  }
+
+  // placeholder / value у input и textarea
+  document.querySelectorAll("input, textarea").forEach(el => {
+    if (el.closest("[data-no-translate]")) return;
+
+    if (el.placeholder) {
+      originalNodes.push({
+        type: "placeholder",
+        node: el,
+        original: el.placeholder
+      });
+    }
+
+    // Переводим value только у кнопок/submit, а не у полей ввода текста
+    const type = (el.type || "").toLowerCase();
+    if ((type === "button" || type === "submit") && el.value) {
+      originalNodes.push({
+        type: "value",
+        node: el,
+        original: el.value
+      });
+    }
+  });
+
+  isOriginalStored = true;
+  console.log("ORIGINAL CONTENT STORED:", originalNodes.length);
+}
+
+// -------------------------------
+// 2) Вернуть оригинальный русский
+// -------------------------------
+function restoreOriginalLanguage() {
+  originalNodes.forEach(item => {
+    if (item.type === "text") {
+      item.node.nodeValue = item.original;
+    } else if (item.type === "placeholder") {
+      item.node.placeholder = item.original;
+    } else if (item.type === "value") {
+      item.node.value = item.original;
+    }
+  });
+}
+
+// -------------------------------
+// 3) Получить все оригинальные тексты для перевода
+// -------------------------------
+function getOriginalTexts() {
+  return originalNodes.map(item => item.original);
+}
+
+// -------------------------------
+// 4) Перевод текста через API
+// -------------------------------
+async function translateTexts(texts, targetLang) {
+  // пустые не трогаем
+  const prepared = texts.map(t => (t || "").trim());
+
+  // Разбиваем на куски, чтобы URL не взорвался
+  const chunks = [];
+  const chunkSize = 40;
+  for (let i = 0; i < prepared.length; i += chunkSize) {
+    chunks.push(prepared.slice(i, i + chunkSize));
+  }
+
+  const results = [];
+
+  for (const chunk of chunks) {
+    const translatedChunk = await Promise.all(
+      chunk.map(async text => {
+        if (!text) return text;
+
+        // ручные переводы имеют приоритет
+        if (MANUAL_TRANSLATIONS[targetLang]?.[text]) {
+          return MANUAL_TRANSLATIONS[targetLang][text];
+        }
+
+        try {
+          const url =
+            `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ru&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+
+          const response = await fetch(url);
+          const data = await response.json();
+
+          if (data && data[0]) {
+            return data[0].map(part => part[0]).join("");
+          }
+
+          return text;
+        } catch (err) {
+          console.error("Translation error for:", text, err);
+          return text;
+        }
+      })
+    );
+
+    results.push(...translatedChunk);
+  }
+
+  return results;
+}
+
+// -------------------------------
+// 5) Применить переводы к DOM
+// -------------------------------
+function applyTranslatedTexts(translatedTexts) {
+  originalNodes.forEach((item, index) => {
+    const translated = translatedTexts[index];
+    if (translated == null) return;
+
+    if (item.type === "text") {
+      item.node.nodeValue = translated;
+    } else if (item.type === "placeholder") {
+      item.node.placeholder = translated;
+    } else if (item.type === "value") {
+      item.node.value = translated;
+    }
+  });
+}
+
+// -------------------------------
+// 6) Обновить активную кнопку языка
+// -------------------------------
+function updateLanguageButtons(lang) {
+  document.querySelectorAll(".lang-option").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.lang === lang);
+  });
+}
+
+// -------------------------------
+// 7) Перевод профиля отдельно (если нужно)
+// -------------------------------
+async function translateProfileSection(lang) {
+  const profile = document.querySelector(".profile, #profile, .profile-card");
+  if (!profile) return;
+
+  // если профиль уже попал в общий перевод — можно ничего не делать
+  // но если у тебя профиль подгружается отдельно/динамически — тогда:
+  // сюда потом можно добавить отдельную обработку
+}
+
+// -------------------------------
+// 8) Главная функция смены языка
+// -------------------------------
+async function changeSiteLanguage(lang) {
+  try {
+    if (!isOriginalStored) {
+      storeOriginalContent();
+    }
+
+if (lang === "ru") {
+    document.body.classList.remove("ua-mode");
+
+    restoreOriginalLanguage();
+    updateLanguageButtons(lang);
+    return; // ← здесь функция заканчивается
+}
+
+currentLanguage = lang;
+localStorage.setItem("siteLanguage", lang);
+
+// ...
+
+if (lang === "ru") {
+    updateLanguageButtons(lang);
+    await translateProfileSection(lang);
+    console.log("LANGUAGE RESTORED: RU");
+    return;
+}
+
+
+    // Иначе переводим ИМЕННО ИЗ РУССКОГО ОРИГИНАЛА
+    const originalTexts = getOriginalTexts();
+    const translatedTexts = await translateTexts(originalTexts, lang);
+
+    applyTranslatedTexts(translatedTexts);
+    updateLanguageButtons(lang);
+    await translateProfileSection(lang);
+
+    console.log(`LANGUAGE APPLIED: ${lang.toUpperCase()}`);
+  } catch (err) {
+    console.error("changeSiteLanguage error:", err);
+  }
+}
+
+// -------------------------------
+// 9) Инициализация
+// -------------------------------
+document.addEventListener("DOMContentLoaded", async () => {
+  storeOriginalContent();
+
+  const savedLang = localStorage.getItem("siteLanguage") || "ru";
+
+  // Назначаем обработчики кнопкам
+  document.querySelectorAll(".lang-option").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const lang = btn.dataset.lang;
+      changeSiteLanguage(lang);
+    });
+  });
+
+  updateLanguageButtons(savedLang);
+
+  if (savedLang !== "ru") {
+    await changeSiteLanguage(savedLang);
+  }
+});
+
+// чтобы можно было вызвать вручную
+window.changeSiteLanguage = changeSiteLanguage;
+
+
+
+
+
+
+
 /* =========================
    FORUM STATE
 ========================= */
@@ -646,6 +939,25 @@ function replyMsg(){
    LOAD THEME (FIXED)
 ========================= */
 
+function toggleUAMode(){
+
+    const enabled =
+        document.body.classList.toggle("ua-mode");
+
+    localStorage.setItem(
+        "ua_mode",
+        enabled ? "on" : "off"
+    );
+
+    showToast(
+        enabled
+        ? "💙💛 Український режим увімкнено"
+        : "UA-режим вимкнено"
+    );
+
+}
+
+
 function loadTheme(){
   const saved = localStorage.getItem("theme");
 
@@ -722,6 +1034,134 @@ function renderChannels(){
   });
 }
 
+
+
+
+
+
+
+
+/* =========================
+   SAFETY GUIDE AI
+========================= */
+
+let guideHistory = [];
+
+/* Добавление сообщения в чат */
+function addGuideMessage(text, sender = "bot") {
+  const chat = document.getElementById("chatMessages");
+  if (!chat) return;
+
+  const div = document.createElement("div");
+  div.className = `msg ${sender}`;
+
+  // чтобы переносы строк сохранялись
+  div.innerHTML = text.replace(/\n/g, "<br>");
+
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+/* Индикатор "думает..." */
+function showTyping() {
+  const chat = document.getElementById("chatMessages");
+  if (!chat) return null;
+
+  const div = document.createElement("div");
+  div.className = "msg bot";
+  div.id = "guideTyping";
+  div.innerText = "SafetyGuide думає...";
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+
+  return div;
+}
+
+function removeTyping() {
+  document.getElementById("guideTyping")?.remove();
+}
+
+/* Основной запрос к AI */
+async function askSafetyGuide(userText) {
+  const { data, error } = await supabase.functions.invoke("safetyguide-ai", {
+    body: {
+      message: userText,
+      history: guideHistory
+    }
+  });
+
+  if (error) {
+    console.error("AI error:", error);
+    return "⚠️ Помилка: Ядро ChatGPT не працює, або в вас проблеми з підключенням. будь ласка, перезавантажте сторінку";
+  }
+
+  if (!data || !data.reply) {
+    return "⚠️ Я не можу відповісти на ваш запит(";
+  }
+
+  return data.reply;
+}
+
+/* Отправка сообщения */
+async function sendMessage() {
+  const input = document.getElementById("chatInput");
+  if (!input) return;
+
+  const text = input.value.trim();
+  if (!text) return;
+
+  // показываем сообщение пользователя
+  addGuideMessage(text, "user");
+
+  // сохраняем в историю
+  guideHistory.push({
+    role: "user",
+    content: text
+  });
+
+  input.value = "";
+
+  // показываем "печатает..."
+  showTyping();
+
+  try {
+    const reply = await askSafetyGuide(text);
+
+    removeTyping();
+    addGuideMessage(reply, "bot");
+
+    guideHistory.push({
+      role: "assistant",
+      content: reply
+    });
+
+    // ограничим историю, чтобы не раздувалась
+    if (guideHistory.length > 20) {
+      guideHistory = guideHistory.slice(-20);
+    }
+
+  } catch (err) {
+    console.error(err);
+    removeTyping();
+    addGuideMessage("⚠️ Сталася помилка при зверненні до SafetyGuide.", "bot");
+  }
+}
+
+/* Быстрые кнопки */
+function quickAsk(text) {
+  const input = document.getElementById("chatInput");
+  if (!input) return;
+
+  input.value = text;
+  sendMessage();
+}
+
+
+
+
+
+
+
 /* =========================
    INIT
 ========================= */
@@ -738,6 +1178,41 @@ document.getElementById("themeToggle")
   renderChannels();    // 🔥 ВОТ ОНИ
   loadTheme();
   checkAccess();
+  
+
+const uaBtn = document.getElementById("uaThemeBtn");
+
+  if (uaBtn) {
+
+    uaBtn.addEventListener("click", (e) => {
+
+      e.preventDefault();
+
+      toggleUAMode();
+
+    });
+
+  }
+
+  // восстановление режима после перезагрузки
+
+ // Восстанавливаем украинский режим
+if (localStorage.getItem("ua_mode") === "on") {
+    document.body.classList.add("ua-mode");
+}
+
+// Приветствие SafetyGuide
+const chatMessages = document.getElementById("chatMessages");
+
+if (chatMessages && !chatMessages.dataset.loaded) {
+    addGuideMessage(
+        "Привіт 👋 Я SafetyGuide.\nЯ можу допомогти із захистом каналу, перевіркою підозрілих дій, поясненням рейдів та базовими порадами безпеки.",
+        "bot"
+    );
+
+    chatMessages.dataset.loaded = "true";
+}
+
 };
 
 /* =========================
@@ -896,7 +1371,7 @@ const channels = [
         name:"ІПЗ",
         desc:"інформаційний канал",
         type:"infochanel",
-        link:"https://invite.viber.com/?g2=AQBwQGdd%2BtHCe1Zl6d3z6cRni%2BYROwhvXhfUXQ9QRTJIrIhx13ZL57TsyulpfHaH",
+        link:"https://invite.viber.com/?g2=AQAB12OAeTXzu1ZIOMzGYNZWEvYUhNTnk%2FCw1%2B8bbzUzX5YMberLl86liKISlplR",
         tags:"ІПЗ новини"
     },
 
@@ -948,6 +1423,87 @@ const channels = [
         tags:"hub"
     },
 
+    {
+        name:"ŁKS",
+        desc:"імперія рейдерів",
+        type:"raider",
+        link:"https://invite.viber.com/?g2=AQBvd4NF0jcjHFYPPc%2F0wsnJF21WQWkMqo5KhRgCw63ZDWlTm6flKBNR%2Furhzi7%2B",
+        tags:"LKS"
+    },
+
+    {
+        name:"FGG",
+        desc:"імперія рeйдерів",
+        type:"raider",
+        link:"https://invite.viber.com/?g2=AQArMI%2FOWHjg11Z%2BGPSO53uAk14GgsfgjQFa62Y2DSRClAh1IlKZFbhfLHk5gs63",
+        tags:"FGG"
+    },
+
+    {
+        name:"Теневой Легион",
+        desc:"легіон рейдерів",
+        type:"raider",
+        link:"https://invite.viber.com/?g2=AQBcAzlsWjqam1ak2Opf0JlrcoUhWlEQoJ1MojcRSEy3OegtwSIhZFS3sd2iIwtu",
+        tags:"legion"
+    },
+
+    {
+        name:"П.Н.К",
+        desc:"імперія рейдерів",
+        type:"raider",
+        link:"https://invite.viber.com/?g2=AQABAXA%2Bk8ePnFaWOFOuqxHUqFfegFSKfgRiE2Lt8pKfjQ1S316W06wkxN7Gdox4",
+        tags:"PNK"
+    },
+
+    {
+        name:"EnglishEmpire",
+        desc:"імперія нейтральних рейдерів",
+        type:"raider",
+        link:"https://invite.viber.com/?g2=AQB5%2BkYD0zU2DVaAvzsz5OP%2FoEdNVEPzEf%2FwLIM%2B7IVJmEKoOPCBKuHZ9OYhNzi9",
+        tags:"EI"
+    },
+
+    {
+        name:"К.А.Р.А",
+        desc:"канал рейдера",
+        type:"raider",
+        link:"https://invite.viber.com/?g2=AQBCo3RzhiH07FaO9nEkdLaFDmZ%2FGZVN8LYyoBzGYerHbvwqDhwr1Tby7DDhPKZl",
+        tags:""
+    },
+
+    {
+        name:"Dark Age Empire",
+        desc:"імперія рейдерів",
+        type:"raider",
+        link:"https://invite.viber.com/?g2=AQAKqZ%2FyYZ0u91arcaMLOB%2F708QL0zeUxJJChmpKQocJHP4%2By6LN7s5aRq3DLHZ0",
+        tags:""
+    },
+
+    {
+        name:"Hacking Floof",
+        desc:"канал найомних хакерів",
+        type:"hacker",
+        link:"https://invite.viber.com/?g2=AQBdsIkTJjqpKVY1opJ6q5kHDNSu8UZ4UE2ulZmRxqTb%2BR0An0KQDJWl9AHSSDN1",
+        tags:""
+    },
+
+    {
+        name:"XE",
+        desc:"імперія рейдерів",
+        type:"raider",
+        link:"https://invite.viber.com/?g2=AQB7k7gzwdwsXFaC7uqpCbxJ9M4Aifp79yqiBt4B9tzHkf57I4bAMAb8ncs7j%2FyD",
+        tags:""
+    },
+
+    {
+        name:"Gjebi",
+        desc:"канал рейдера",
+        type:"raider",
+        link:"https://invite.viber.com/?g2=AQBrdDrLlbm4hlZYx5HFHrLcdgiRO3JkSBGTs9wkNJkLLxlXFKPkzWW3v065jphQ",
+        tags:""
+    },
+
+    
     {
         name:"BlueLock⛓️",
         desc:"Імперія рейдерів",
@@ -1041,3 +1597,7 @@ window.openSettings = openSettings;
 window.closeSettings = closeSettings;
 window.openUserInfo = openUserInfo;
 window.closeUserInfo = closeUserInfo;
+window.changeSiteLanguage = changeSiteLanguage;
+
+window.sendMessage = sendMessage;
+window.quickAsk = quickAsk;

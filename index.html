@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -10,7 +11,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
+
+
+
+
+<div id="google_translate_element" style="display:none;"></div>
 
 <div id="toast"></div>
 
@@ -50,7 +55,30 @@
         <!-- HOME -->
         <section class="page active" id="home">
 
-         
+         <section class="ua-banner-wrap">
+  <div class="ua-banner">
+    <div class="ua-banner-glow"></div>
+
+    <div class="ua-banner-content">
+      <div class="ua-heart">♡</div>
+
+      <h2 class="ua-title">
+        <span class="yellow">Разом.</span>
+        <span class="blue">Сильні.</span>
+        <span class="yellow">Незламні.</span>
+        <span class="white">З днем конституції України!</span>
+      </h2>
+
+      <p class="ua-text">
+        Підтримуємо Україну та віримо в її майбутнє.<br>
+        Єдність, свобода та гідність — наші цінності.
+      </p>
+
+      <button class="ua-btn" id="uaThemeBtn" type="button">
+  Слава Україні! 💛💙
+</button>
+  </div>
+</section>
 
     <div class="card glow center">
         
@@ -68,12 +96,13 @@
   <h3>Перелік оновлень </h3>
 
   <div class="updates-list">
-    <div class="update">Додано більший список каналів<b>(17.06.2026)</b></div>
-    <div class="update">Виправлення деяких багів та нові рейдери<b>(02.06.2026)</b> </div>
-    <div class="update">Додано перелік оновлень <b>(1.06.2026)</b></div>
-    <div class="update">Додано можливіть спілкуватись у форумі realtime, не перезавантажуючи сторінку <b>(1.06.2026)</b> </div>
-    <div class="update">Додано форум <b>(31.05.2026)</b> </div>
-    <div class="update">Повний реліз сайту<b>(30.05.2026)</b> </div>
+    <div class="update">День конституції України! додано перемикач мов та банер для івентів | <b>(28.06.2026)</b></div>
+    <div class="update">Додано більший список каналів | <b>(17.06.2026)</b></div>
+    <div class="update">Виправлення деяких багів та нові рейдери | <b>(02.06.2026)</b> </div>
+    <div class="update">Додано перелік оновлень |  <b>(1.06.2026)</b></div>
+    <div class="update">Додано можливіть спілкуватись у форумі realtime, не перезавантажуючи сторінку | <b>(1.06.2026)</b> </div>
+    <div class="update">Додано форум | <b>(31.05.2026)</b> </div>
+    <div class="update">Повний реліз сайту | <b>(30.05.2026)</b> </div>
   </div>
 </div>
            
@@ -292,6 +321,13 @@
 </label>
 </div>
 
+
+<div class="language-switcher">
+  <button class="lang-option active" data-lang="ru">RU</button>
+  <button class="lang-option" data-lang="uk">UA</button>
+  <button class="lang-option" data-lang="en">EN</button>
+</div>
+
         <button onclick="saveProfile()">
             Зберегти
         </button>
@@ -336,6 +372,7 @@
     </div>
 
 </div>
+
 
 
 </body>
